@@ -194,23 +194,19 @@ class Decimal implements Comparable {
    * digits after the decimal point.
    */
   String toStringAsFixed(int fractionDigits) {
-    final intPart = (_numerator < 0 ? -_numerator : _numerator) ~/ _denominator;
-    final remining = (_numerator < 0 ? -_numerator : _numerator) % _denominator;
     if (fractionDigits == 0) {
-      if (remining * 2 < _denominator) {
-        return '${intPart}';
-      } else {
-        return '${intPart + 1}';
-      }
+      return round().toInt().toString();
     } else {
-      int mul = 10;
+      int mul = 1;
       for (int i = 0; i < fractionDigits; i++) {
         mul *= 10;
       }
-      final fractionPartPlus1 = (_denominator + remining) * mul ~/ _denominator;
-      final roundPart = fractionPartPlus1 % 10 < 5 ? 0 : 1;
-      final fractionPart = (fractionPartPlus1 ~/ 10 + roundPart).toString();
-      return '${_numerator < 0 ? '-' : ''}$intPart.${fractionPart.toString().substring(1)}';
+      final mulDec = new Decimal.fromInt(mul);
+      final tmp = (abs() + _1) * mulDec;
+      final tmpRound = tmp.round();
+      final intPart = ((tmpRound ~/ mulDec) - _1).toInt();
+      final decimalPart = tmpRound.toInt().toString().substring(intPart.toString().length);
+      return '${isNegative ? '-' : ''}${intPart}.${decimalPart}';
     }
   }
 
