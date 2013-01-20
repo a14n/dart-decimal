@@ -18,8 +18,7 @@ To use this library in your code :
 
 ```yaml
 dependencies:
-  decimal: 
-    git: git://github.com/a14n/dart-decimal.git
+  decimal: '< 1.0.0'
 ```
 
 * add import in your `dart` code :
