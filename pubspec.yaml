@@ -1,7 +1,7 @@
 name:  decimal
 author: "Alexandre Ardhuin <alexandre.ardhuin@gmail.com>"
 homepage: https://github.com/a14n/dart-decimal
-version: 0.0.1
+version: 0.0.2-dev
 description:  A simple package to deal with decimal numbers
 
 dependencies:
