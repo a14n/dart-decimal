@@ -147,10 +147,10 @@ class Decimal implements Comparable {
   Decimal abs() => isNegative ? (-this) : this;
 
   /** Returns the greatest integer value no greater than this [num]. */
-  Decimal floor() => isNegative ? (this.truncate() - _1) : this.truncate();
+  Decimal floor() => isInteger ? this.truncate() : isNegative ? (this.truncate() - _1) : this.truncate();
 
   /** Returns the least integer value that is no smaller than this [num]. */
-  Decimal ceil() => isNegative ? this.truncate() : (this.truncate() + _1);
+  Decimal ceil() => isInteger ? this.truncate() : isNegative ? this.truncate() : (this.truncate() + _1);
 
   /**
    * Returns the integer value closest to this [num].

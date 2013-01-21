@@ -1,3 +1,5 @@
+library tests;
+
 import 'package:unittest/unittest.dart';
 import 'package:decimal/decimal.dart';
 
@@ -127,10 +129,14 @@ main() {
     expect((dec('1.498').abs()).toString(), equals('1.498'));
   });
   test('floor()', () {
-    expect((dec('-1.49').floor()).toString(), equals('-2'));
+    expect((dec('1').floor()).toString(), equals('1'));
+    expect((dec('-1').floor()).toString(), equals('-1'));
     expect((dec('1.49').floor()).toString(), equals('1'));
+    expect((dec('-1.49').floor()).toString(), equals('-2'));
   });
   test('ceil()', () {
+    expect((dec('1').floor()).toString(), equals('1'));
+    expect((dec('-1').floor()).toString(), equals('-1'));
     expect((dec('-1.49').ceil()).toString(), equals('-1'));
     expect((dec('1.49').ceil()).toString(), equals('2'));
   });
