@@ -151,6 +151,11 @@ main() {
     expect((dec('-2.51').truncate()).toString(), equals('-2'));
     expect((dec('-2').truncate()).toString(), equals('-2'));
   });
+  test('clamp(Decimal lowerLimit, Decimal upperLimit)', () {
+    expect((dec('2.51').clamp(dec('1'), dec('3'))).toString(), equals('2.51'));
+    expect((dec('2.51').clamp(dec('2.6'), dec('3'))).toString(), equals('2.6'));
+    expect((dec('2.51').clamp(dec('1'), dec('2.5'))).toString(), equals('2.5'));
+  });
   test('toInt()', () {
     expect(dec('2.51').toInt(), equals(2));
     expect(dec('-2.51').toInt(), equals(-2));
@@ -179,13 +184,6 @@ main() {
     [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
       [1, 5, 10].forEach((p) {
         expect(dec(n.toString()).toStringAsPrecision(p), equals(n.toStringAsPrecision(p)));
-      });
-    });
-  });
-  test('toRadixString(int radix)', () {
-    [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
-      [2, 5, 10, 36].forEach((p) {
-        expect(dec(n.toString()).toRadixString(p), equals(n.toRadixString(p)));
       });
     });
   });

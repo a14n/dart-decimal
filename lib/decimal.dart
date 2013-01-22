@@ -176,6 +176,13 @@ class Decimal implements Comparable {
    */
   Decimal truncate() => new Decimal.fromInt(this.toInt());
 
+  /**
+   * Clamps [this] to be in the range [lowerLimit]-[upperLimit]. The comparison
+   * is done using [compareTo] and therefore takes [:-0.0:] into account.
+   * It also implies that [double.NaN] is treated as the maximal double value.
+   */
+  Decimal clamp(Decimal lowerLimit, Decimal upperLimit) => this < lowerLimit ? lowerLimit : this > upperLimit ? upperLimit : this;
+
   /** Truncates this [num] to an integer and returns the result as an [int]. */
   int toInt() => _numerator ~/ _denominator;
 
@@ -221,16 +228,4 @@ class Decimal implements Comparable {
    * significant digits.
    */
   String toStringAsPrecision(int precision) => isInteger ? toInt().toStringAsPrecision(precision) : toDouble().toStringAsPrecision(precision);
-
-  /**
-   * Converts a [num] to a string representation in the given [radix].
-   *
-   * The [num] in converted to an [int] using [toInt]. That [int] is
-   * then converted to a string representation with the given
-   * [radix]. In the string representation, lower-case letters are
-   * used for digits above '9'.
-   *
-   * The [radix] argument must be an integer between 2 and 36.
-   */
-  String toRadixString(int radix) => toInt().toRadixString(radix);
 }
