@@ -16,7 +16,7 @@ library decimal;
 
 import 'package:meta/meta.dart';
 
-final _PATERN = new RegExp(r"^(\-?\d+)(\.\d\d*)?$");
+final _PATERN = new RegExp(r"^(-?\d+)(\.\d+)?$");
 final _0 = new Decimal.fromInt(0);
 final _1 = new Decimal.fromInt(1);
 final _5 = new Decimal.fromInt(5);
@@ -83,7 +83,23 @@ class Decimal implements Comparable {
   String toStringAsFraction() => '${_numerator}/${_denominator}';
 
   @override String toString() {
-    String asString = toStringAsFixed(10);
+    // remove factor 2 and 5 of denominator to know if String representation is finished
+    // in decimal system, division by 2 or 5 leads to a finished size of decimal part
+    int denominator = _denominator;
+    int fractionDigits = 0;
+    while (denominator % 2 == 0) {
+      denominator = denominator ~/ 2;
+      fractionDigits++;
+    }
+    while (denominator % 5 == 0) {
+      denominator = denominator ~/ 5;
+      fractionDigits++;
+    }
+    final hasLimitedLength = _numerator % denominator == 0;
+    if (!hasLimitedLength) {
+      fractionDigits = 10;
+    }
+    String asString = toStringAsFixed(fractionDigits);
     while (asString.contains('.') && (asString.endsWith('0') || asString.endsWith('.'))) {
       asString = asString.substring(0, asString.length - 1);
     }
