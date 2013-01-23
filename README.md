@@ -31,5 +31,8 @@ import 'package:decimal/decimal.dart';
 
 * Start computing using `dec('1.23')`.
 
+## Limitation ##
+**WARNING** : If you are using this package through dart2js, results may not be good. This is because dart2js does not implement yet integers with arbitrary precision. Once [issue 1533](http://code.google.com/p/dart/issues/detail?id=1533) fixed, you should be able to use it in javascript.
+
 ## License ##
 Apache 2.0
