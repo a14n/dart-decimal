@@ -2,6 +2,8 @@ Dart Decimals
 =============
 This project enable to make computations on decimal numbers without loosing precision like double operations.
 
+[![](https://drone.io/a14n/dart-decimal/status.png)](https://drone.io/a14n/dart-decimal/latest)
+
 For instance :
 
 ```dart
