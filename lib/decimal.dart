@@ -16,7 +16,7 @@ library decimal;
 
 import 'package:meta/meta.dart';
 
-final _PATERN = new RegExp(r"^(-?\d+)(\.\d+)?$");
+final _PATTERN = new RegExp(r"^(-?\d+)(\.\d+)?$");
 final _0 = new Decimal.fromInt(0);
 final _1 = new Decimal.fromInt(1);
 final _5 = new Decimal.fromInt(5);
@@ -37,7 +37,7 @@ class Decimal implements Comparable {
   int _numerator, _denominator;
 
   Decimal(String value) {
-    final match = _PATERN.firstMatch(value);
+    final match = _PATTERN.firstMatch(value);
     if (match == null) throw new FormatException("$value is not a valid format");
     final group1 = match.group(1);
     final group2 = match.group(2);
