@@ -3,12 +3,14 @@ library tests;
 import 'package:unittest/unittest.dart';
 import 'package:decimal/decimal.dart';
 
+Decimal dec(String value) => Decimal.parse(value);
+
 main() {
   test('string validation', () {
-    expect(() => new Decimal('1'), returnsNormally);
-    expect(() => new Decimal('-1'), returnsNormally);
-    expect(() => new Decimal('1.'), throws);
-    expect(() => new Decimal('1.0'), returnsNormally);
+    expect(() => dec('1'), returnsNormally);
+    expect(() => dec('-1'), returnsNormally);
+    expect(() => dec('1.'), throws);
+    expect(() => dec('1.0'), returnsNormally);
   });
   test('get isInteger', () {
     expect(dec('1').isInteger, equals(true));
@@ -28,7 +30,7 @@ main() {
   });
   test('toString()', () {
     ['0', '1', '-1', '-1.1', '23', '31878018903828899277492024491376690701584023926880.1'].forEach((String n) {
-      expect(new Decimal(n).toString(), equals(n));
+      expect(dec(n).toString(), equals(n));
     });
     expect((dec('1')/dec('3')).toString(), equals('0.3333333333'));
     expect((dec('1.0000000000000000000000000000000000000000000000001')*dec('1.0000000000000000000000000000000000000000000000001')).toString(), equals('1.00000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000001'));
