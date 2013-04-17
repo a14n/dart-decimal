@@ -113,6 +113,38 @@ class Decimal implements Comparable {
   Decimal truncate() => new Decimal._fromRational(_rational.truncate());
 
   /**
+   * Returns the integer value closest to `this`.
+   *
+   * Rounds away from zero when there is no closest integer:
+   *  [:(3.5).round() == 4:] and [:(-3.5).round() == -4:].
+   *
+   * The result is a double.
+   */
+  double roundToDouble() => _rational.roundToDouble();
+
+  /**
+   * Returns the greatest integer value no greater than `this`.
+   *
+   * The result is a double.
+   */
+  double floorToDouble() => _rational.floorToDouble();
+
+  /**
+   * Returns the least integer value no smaller than `this`.
+   *
+   * The result is a double.
+   */
+  double ceilToDouble() => _rational.ceilToDouble();
+
+  /**
+   * Returns the integer obtained by discarding any fractional
+   * digits from `this`.
+   *
+   * The result is a double.
+   */
+  double truncateToDouble() => _rational.truncateToDouble();
+
+  /**
    * Clamps [this] to be in the range [lowerLimit]-[upperLimit]. The comparison
    * is done using [compareTo] and therefore takes [:-0.0:] into account.
    * It also implies that [double.NaN] is treated as the maximal double value.

@@ -7,4 +7,4 @@ dev_dependencies:
   unittest: any
 dependencies:
   meta: any
-  rational: '<1.0.0'
+  rational: '>=0.0.5 <1.0.0'
