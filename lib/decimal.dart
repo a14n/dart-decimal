@@ -147,7 +147,6 @@ class Decimal implements Comparable {
   /**
    * Clamps [this] to be in the range [lowerLimit]-[upperLimit]. The comparison
    * is done using [compareTo] and therefore takes [:-0.0:] into account.
-   * It also implies that [double.NaN] is treated as the maximal double value.
    */
   Decimal clamp(Decimal lowerLimit, Decimal upperLimit) => new Decimal._fromRational(_rational.clamp(lowerLimit._rational, upperLimit._rational));
 
