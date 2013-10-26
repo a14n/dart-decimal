@@ -14,7 +14,6 @@
 
 library decimal;
 
-import 'package:meta/meta.dart';
 import 'package:rational/rational.dart';
 
 class Decimal implements Comparable {

@@ -6,5 +6,4 @@ description: A simple package to deal with decimal numbers
 dev_dependencies:
   unittest: any
 dependencies:
-  meta: any
   rational: '>=0.0.5 <1.0.0'
