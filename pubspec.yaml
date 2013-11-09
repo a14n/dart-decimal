@@ -4,6 +4,8 @@ homepage: https://github.com/a14n/dart-decimal
 version: 0.0.5-dev
 description: A simple package to deal with decimal numbers
 dev_dependencies:
-  unittest: any
+  unittest: ">=0.9.0 <0.10.0"
 dependencies:
-  rational: '>=0.0.5 <1.0.0'
+  rational: '>=0.0.6 <0.1.0'
+environment:
+  sdk: ">=0.8.10+6 <2.0.0"
