@@ -11,7 +11,7 @@ For instance :
 print(0.2 + 0.1); // displays 0.30000000000000004
 
 // with decimal
-print(dec('0.2') + dec('0.1')); // displays 0.3
+print(Decimal.parse('0.2') + Decimal.parse('0.1')); // displays 0.3
 ```
 
 ## Usage ##
@@ -29,7 +29,14 @@ dependencies:
 import 'package:decimal/decimal.dart';
 ```
 
-* Start computing using `dec('1.23')`.
+* Start computing using `Decimal.parse('1.23')`.
+
+_Hint_ : To make your code shorter you can define a shortcut for Decimal.parse :
+
+```dart
+final d = Decimal.parse;
+d('0.2') + d('0.1'); // => 0.3
+```
 
 ## License ##
 Apache 2.0
