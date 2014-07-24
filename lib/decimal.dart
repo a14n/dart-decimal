@@ -31,7 +31,13 @@ class Decimal implements Comparable {
 
   bool get isInteger => _rational.isInteger;
 
-  bool operator ==(Decimal other) => _rational == other._rational;
+  @override
+  bool operator ==(Object other) =>
+      other is Decimal &&
+      _rational == other._rational;
+
+  @override
+  int get hashCode => _rational.hashCode;
 
   @override String toString() => _rational.toDecimalString();
 
