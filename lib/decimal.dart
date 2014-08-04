@@ -178,7 +178,7 @@ class Decimal implements Comparable {
    * Converts a [num] to a string in decimal exponential notation with
    * [fractionDigits] digits after the decimal point.
    */
-  String toStringAsExponential(int fractionDigits) => _rational.toStringAsExponential(fractionDigits);
+  String toStringAsExponential([int fractionDigits]) => _rational.toStringAsExponential(fractionDigits);
 
   /**
    * Converts a [num] to a string representation with [precision]
