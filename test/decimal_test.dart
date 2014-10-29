@@ -171,6 +171,32 @@ main() {
     expect(dec('-2.51').toDouble(), equals(-2.51));
     expect(dec('-2').toDouble(), equals(-2.0));
   });
+  test('hasFinitePrecision', () {
+    [dec('100'), dec('100.100'), dec('1')/dec('5'), (dec('1')/dec('3'))*dec('3'), dec('0.00000000000000000000001')].forEach((Decimal d) {
+      expect(d.hasFinitePrecision, isTrue);
+    });
+    [dec('1')/dec('3')].forEach((Decimal d) {
+      expect(d.hasFinitePrecision, isFalse);
+    });
+  });
+  test('precision', () {
+    expect(dec('100').precision, equals(3));
+    expect(dec('10000').precision, equals(5));
+    expect(dec('100.000').precision, equals(3));
+    expect(dec('100.1').precision, equals(4));
+    expect(dec('100.0000001').precision, equals(10));
+    expect(dec('100.000000000000000000000000000001').precision, equals(33));
+    expect(() => (dec('1')/dec('3')).precision, throws);
+  });
+  test('scale', () {
+    expect(dec('100').scale, equals(0));
+    expect(dec('10000').scale, equals(0));
+    expect(dec('100.000').scale, equals(0));
+    expect(dec('100.1').scale, equals(1));
+    expect(dec('100.0000001').scale, equals(7));
+    expect(dec('100.000000000000000000000000000001').scale, equals(30));
+    expect(() => (dec('1')/dec('3')).scale, throws);
+  });
   test('toStringAsFixed(int fractionDigits)', () {
     [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
       [0, 1, 5, 10].forEach((p) {

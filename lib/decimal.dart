@@ -167,6 +167,31 @@ class Decimal implements Comparable {
    */
   double toDouble() => _rational.toDouble();
 
+  /**
+   * Inspect if this [num] has a finite precision.
+   */
+  bool get hasFinitePrecision => _rational.hasFinitePrecision;
+
+  /**
+   * The precision of this [num].
+   *
+   * The sum of the number of digits before and after
+   * the decimal point.
+   *
+   * Throws [StateError] if the precision is infinite,
+   * i.e. when [hasFinitePrecision] is [false].
+   */
+  int get precision => _rational.precision;
+
+  /**
+   * The scale of this [num].
+   *
+   * The number of digits after the decimal point.
+   *
+   * Throws [StateError] if the scale is infinite,
+   * i.e. when [hasFinitePrecision] is [false].
+   */
+  int get scale => _rational.scale;
 
   /**
    * Converts a [num] to a string representation with [fractionDigits]
