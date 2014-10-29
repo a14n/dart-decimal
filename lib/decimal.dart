@@ -97,6 +97,13 @@ class Decimal implements Comparable {
   /** Returns the absolute value of this [num]. */
   Decimal abs() => new Decimal._fromRational(_rational.abs());
 
+  /**
+   * The signum function value of this [num].
+   *
+   * E.e. -1, 0 or 1 as the value of this [num] is negative, zero or positive.
+   */
+  int get signum => _rational.signum;
+
   /** Returns the greatest integer value no greater than this [num]. */
   Decimal floor() => new Decimal._fromRational(_rational.floor());
 
