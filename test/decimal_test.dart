@@ -133,6 +133,11 @@ main() {
     expect((dec('-1.49').abs()).toString(), equals('1.49'));
     expect((dec('1.498').abs()).toString(), equals('1.498'));
   });
+  test('signum', () {
+    expect(dec('-1.49').signum, equals(-1));
+    expect(dec('1.49').signum, equals(1));
+    expect(dec('0').signum, equals(0));
+  });
   test('floor()', () {
     expect((dec('1').floor()).toString(), equals('1'));
     expect((dec('-1').floor()).toString(), equals('-1'));
