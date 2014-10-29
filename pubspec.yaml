@@ -1,5 +1,5 @@
 name: decimal
-version: 0.1.3
+version: 0.1.4-dev
 author: Alexandre Ardhuin <alexandre.ardhuin@gmail.com>
 description: A simple package to deal with decimal numbers
 homepage: https://github.com/a14n/dart-decimal
