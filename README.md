@@ -1,8 +1,8 @@
-Dart Decimals
-=============
-This project enable to make computations on decimal numbers without loosing precision like double operations.
+# Dart Decimals
 
-[![](https://drone.io/a14n/dart-decimal/status.png)](https://drone.io/a14n/dart-decimal/latest)
+[![Build Status](https://travis-ci.org/a14n/dart-decimal.svg?branch=master)](https://travis-ci.org/a14n/dart-decimal)
+
+This project enable to make computations on decimal numbers without loosing precision like double operations.
 
 For instance :
 
@@ -14,13 +14,13 @@ print(0.2 + 0.1); // displays 0.30000000000000004
 print(Decimal.parse('0.2') + Decimal.parse('0.1')); // displays 0.3
 ```
 
-## Usage ##
+## Usage
 To use this library in your code :
 * add a dependency in your `pubspec.yaml` :
 
 ```yaml
 dependencies:
-  decimal: '<1.0.0'
+  decimal: ^0.1.3
 ```
 
 * add import in your `dart` code :
@@ -38,5 +38,5 @@ final d = Decimal.parse;
 d('0.2') + d('0.1'); // => 0.3
 ```
 
-## License ##
+## License
 Apache 2.0
