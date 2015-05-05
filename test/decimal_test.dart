@@ -1,6 +1,6 @@
 library tests;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:decimal/decimal.dart';
 
 Decimal dec(String value) => Decimal.parse(value);
@@ -29,12 +29,22 @@ main() {
     expect(dec('1') != (dec('2')), equals(true));
   });
   test('toString()', () {
-    ['0', '1', '-1', '-1.1', '23', '31878018903828899277492024491376690701584023926880.1'].forEach((String n) {
+    [
+      '0',
+      '1',
+      '-1',
+      '-1.1',
+      '23',
+      '31878018903828899277492024491376690701584023926880.1'
+    ].forEach((String n) {
       expect(dec(n).toString(), equals(n));
     });
-    expect((dec('1')/dec('3')).toString(), equals('0.3333333333'));
+    expect((dec('1') / dec('3')).toString(), equals('0.3333333333'));
     expect(dec('9.9').toString(), equals('9.9'));
-    expect((dec('1.0000000000000000000000000000000000000000000000001')*dec('1.0000000000000000000000000000000000000000000000001')).toString(), equals('1.00000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000001'));
+    expect((dec('1.0000000000000000000000000000000000000000000000001') *
+            dec('1.0000000000000000000000000000000000000000000000001'))
+        .toString(), equals(
+            '1.00000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000001'));
   });
   test('compareTo(Decimal other)', () {
     expect(dec('1').compareTo(dec('1')), equals(0));
@@ -46,20 +56,26 @@ main() {
     expect((dec('1') + dec('1')).toString(), equals('2'));
     expect((dec('1.1') + dec('1')).toString(), equals('2.1'));
     expect((dec('1.1') + dec('0.9')).toString(), equals('2'));
-    expect((dec('31878018903828899277492024491376690701584023926880.0') + dec('0.9')).toString(), equals('31878018903828899277492024491376690701584023926880.9'));
+    expect((dec('31878018903828899277492024491376690701584023926880.0') +
+            dec('0.9')).toString(),
+        equals('31878018903828899277492024491376690701584023926880.9'));
   });
   test('operator -(Decimal other)', () {
     expect((dec('1') - dec('1')).toString(), equals('0'));
     expect((dec('1.1') - dec('1')).toString(), equals('0.1'));
     expect((dec('0.1') - dec('1.1')).toString(), equals('-1'));
-    expect((dec('31878018903828899277492024491376690701584023926880.0') - dec('0.9')).toString(), equals('31878018903828899277492024491376690701584023926879.1'));
+    expect((dec('31878018903828899277492024491376690701584023926880.0') -
+            dec('0.9')).toString(),
+        equals('31878018903828899277492024491376690701584023926879.1'));
   });
   test('operator *(Decimal other)', () {
     expect((dec('1') * dec('1')).toString(), equals('1'));
     expect((dec('1.1') * dec('1')).toString(), equals('1.1'));
     expect((dec('1.1') * dec('0.1')).toString(), equals('0.11'));
     expect((dec('1.1') * dec('0')).toString(), equals('0'));
-    expect((dec('31878018903828899277492024491376690701584023926880.0') * dec('10')).toString(), equals('318780189038288992774920244913766907015840239268800'));
+    expect((dec('31878018903828899277492024491376690701584023926880.0') *
+            dec('10')).toString(),
+        equals('318780189038288992774920244913766907015840239268800'));
   });
   test('operator %(Decimal other)', () {
     expect((dec('2') % dec('1')).toString(), equals('0'));
@@ -74,7 +90,9 @@ main() {
     expect((dec('1.1') / dec('1')).toString(), equals('1.1'));
     expect((dec('1.1') / dec('0.1')).toString(), equals('11'));
     expect((dec('0') / dec('0.2315')).toString(), equals('0'));
-    expect((dec('31878018903828899277492024491376690701584023926880.0') / dec('10')).toString(), equals('3187801890382889927749202449137669070158402392688'));
+    expect((dec('31878018903828899277492024491376690701584023926880.0') /
+            dec('10')).toString(),
+        equals('3187801890382889927749202449137669070158402392688'));
   });
   test('operator ~/(Decimal other)', () {
     expect(() => dec('1') ~/ dec('0'), throws);
@@ -177,10 +195,16 @@ main() {
     expect(dec('-2').toDouble(), equals(-2.0));
   });
   test('hasFinitePrecision', () {
-    [dec('100'), dec('100.100'), dec('1')/dec('5'), (dec('1')/dec('3'))*dec('3'), dec('0.00000000000000000000001')].forEach((Decimal d) {
+    [
+      dec('100'),
+      dec('100.100'),
+      dec('1') / dec('5'),
+      (dec('1') / dec('3')) * dec('3'),
+      dec('0.00000000000000000000001')
+    ].forEach((Decimal d) {
       expect(d.hasFinitePrecision, isTrue);
     });
-    [dec('1')/dec('3')].forEach((Decimal d) {
+    [dec('1') / dec('3')].forEach((Decimal d) {
       expect(d.hasFinitePrecision, isFalse);
     });
   });
@@ -191,7 +215,7 @@ main() {
     expect(dec('100.1').precision, equals(4));
     expect(dec('100.0000001').precision, equals(10));
     expect(dec('100.000000000000000000000000000001').precision, equals(33));
-    expect(() => (dec('1')/dec('3')).precision, throws);
+    expect(() => (dec('1') / dec('3')).precision, throws);
   });
   test('scale', () {
     expect(dec('100').scale, equals(0));
@@ -200,26 +224,29 @@ main() {
     expect(dec('100.1').scale, equals(1));
     expect(dec('100.0000001').scale, equals(7));
     expect(dec('100.000000000000000000000000000001').scale, equals(30));
-    expect(() => (dec('1')/dec('3')).scale, throws);
+    expect(() => (dec('1') / dec('3')).scale, throws);
   });
   test('toStringAsFixed(int fractionDigits)', () {
     [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
       [0, 1, 5, 10].forEach((p) {
-        expect(dec(n.toString()).toStringAsFixed(p), equals(n.toStringAsFixed(p)));
+        expect(
+            dec(n.toString()).toStringAsFixed(p), equals(n.toStringAsFixed(p)));
       });
     });
   });
   test('toStringAsExponential(int fractionDigits)', () {
     [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
       [1, 5, 10].forEach((p) {
-        expect(dec(n.toString()).toStringAsExponential(p), equals(n.toStringAsExponential(p)));
+        expect(dec(n.toString()).toStringAsExponential(p),
+            equals(n.toStringAsExponential(p)));
       });
     });
   });
   test('toStringAsPrecision(int precision)', () {
     [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
       [1, 5, 10].forEach((p) {
-        expect(dec(n.toString()).toStringAsPrecision(p), equals(n.toStringAsPrecision(p)));
+        expect(dec(n.toString()).toStringAsPrecision(p),
+            equals(n.toStringAsPrecision(p)));
       });
     });
   });
