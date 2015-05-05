@@ -1,0 +1,11 @@
+language: dart
+dart:
+  - stable
+  - dev
+sudo: false
+with_content_shell: true
+before_install:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+script: pub run test -p vm -p content-shell -p firefox
+
