@@ -9,7 +9,7 @@ main() {
   test('string validation', () {
     expect(() => dec('1'), returnsNormally);
     expect(() => dec('-1'), returnsNormally);
-    expect(() => dec('1.'), throws);
+    expect(() => dec('1.'), throwsA(anything));
     expect(() => dec('1.0'), returnsNormally);
   });
   test('get isInteger', () {
@@ -41,9 +41,11 @@ main() {
     });
     expect((dec('1') / dec('3')).toString(), equals('0.3333333333'));
     expect(dec('9.9').toString(), equals('9.9'));
-    expect((dec('1.0000000000000000000000000000000000000000000000001') *
-            dec('1.0000000000000000000000000000000000000000000000001'))
-        .toString(), equals(
+    expect(
+        (dec('1.0000000000000000000000000000000000000000000000001') *
+                dec('1.0000000000000000000000000000000000000000000000001'))
+            .toString(),
+        equals(
             '1.00000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000001'));
   });
   test('compareTo(Decimal other)', () {
@@ -56,16 +58,20 @@ main() {
     expect((dec('1') + dec('1')).toString(), equals('2'));
     expect((dec('1.1') + dec('1')).toString(), equals('2.1'));
     expect((dec('1.1') + dec('0.9')).toString(), equals('2'));
-    expect((dec('31878018903828899277492024491376690701584023926880.0') +
-            dec('0.9')).toString(),
+    expect(
+        (dec('31878018903828899277492024491376690701584023926880.0') +
+                dec('0.9'))
+            .toString(),
         equals('31878018903828899277492024491376690701584023926880.9'));
   });
   test('operator -(Decimal other)', () {
     expect((dec('1') - dec('1')).toString(), equals('0'));
     expect((dec('1.1') - dec('1')).toString(), equals('0.1'));
     expect((dec('0.1') - dec('1.1')).toString(), equals('-1'));
-    expect((dec('31878018903828899277492024491376690701584023926880.0') -
-            dec('0.9')).toString(),
+    expect(
+        (dec('31878018903828899277492024491376690701584023926880.0') -
+                dec('0.9'))
+            .toString(),
         equals('31878018903828899277492024491376690701584023926879.1'));
   });
   test('operator *(Decimal other)', () {
@@ -73,8 +79,10 @@ main() {
     expect((dec('1.1') * dec('1')).toString(), equals('1.1'));
     expect((dec('1.1') * dec('0.1')).toString(), equals('0.11'));
     expect((dec('1.1') * dec('0')).toString(), equals('0'));
-    expect((dec('31878018903828899277492024491376690701584023926880.0') *
-            dec('10')).toString(),
+    expect(
+        (dec('31878018903828899277492024491376690701584023926880.0') *
+                dec('10'))
+            .toString(),
         equals('318780189038288992774920244913766907015840239268800'));
   });
   test('operator %(Decimal other)', () {
@@ -85,17 +93,19 @@ main() {
     expect((dec('-1.2') % dec('-0.5')).toString(), equals('0.3'));
   });
   test('operator /(Decimal other)', () {
-    expect(() => dec('1') / dec('0'), throws);
+    expect(() => dec('1') / dec('0'), throwsA(anything));
     expect((dec('1') / dec('1')).toString(), equals('1'));
     expect((dec('1.1') / dec('1')).toString(), equals('1.1'));
     expect((dec('1.1') / dec('0.1')).toString(), equals('11'));
     expect((dec('0') / dec('0.2315')).toString(), equals('0'));
-    expect((dec('31878018903828899277492024491376690701584023926880.0') /
-            dec('10')).toString(),
+    expect(
+        (dec('31878018903828899277492024491376690701584023926880.0') /
+                dec('10'))
+            .toString(),
         equals('3187801890382889927749202449137669070158402392688'));
   });
   test('operator ~/(Decimal other)', () {
-    expect(() => dec('1') ~/ dec('0'), throws);
+    expect(() => dec('1') ~/ dec('0'), throwsA(anything));
     expect((dec('3') ~/ dec('2')).toString(), equals('1'));
     expect((dec('1.1') ~/ dec('1')).toString(), equals('1'));
     expect((dec('1.1') ~/ dec('0.1')).toString(), equals('11'));
@@ -215,7 +225,7 @@ main() {
     expect(dec('100.1').precision, equals(4));
     expect(dec('100.0000001').precision, equals(10));
     expect(dec('100.000000000000000000000000000001').precision, equals(33));
-    expect(() => (dec('1') / dec('3')).precision, throws);
+    expect(() => (dec('1') / dec('3')).precision, throwsA(anything));
   });
   test('scale', () {
     expect(dec('100').scale, equals(0));
@@ -224,7 +234,7 @@ main() {
     expect(dec('100.1').scale, equals(1));
     expect(dec('100.0000001').scale, equals(7));
     expect(dec('100.000000000000000000000000000001').scale, equals(30));
-    expect(() => (dec('1') / dec('3')).scale, throws);
+    expect(() => (dec('1') / dec('3')).scale, throwsA(anything));
   });
   test('toStringAsFixed(int fractionDigits)', () {
     [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {

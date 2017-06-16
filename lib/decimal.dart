@@ -38,12 +38,13 @@ class Decimal implements Comparable<Decimal> {
   @override
   int get hashCode => _rational.hashCode;
 
-  @override String toString() => _rational.toDecimalString();
+  @override
+  String toString() => _rational.toDecimalString();
 
   // implementation of Comparable
 
-  @override int compareTo(Decimal other) =>
-      _rational.compareTo(other._rational);
+  @override
+  int compareTo(Decimal other) => _rational.compareTo(other._rational);
 
   // implementation of num
 
