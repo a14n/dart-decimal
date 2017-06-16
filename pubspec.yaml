@@ -6,6 +6,6 @@ homepage: https://github.com/a14n/dart-decimal
 environment:
   sdk: '>=0.8.10+6 <2.0.0'
 dependencies:
-  rational: ^0.1.8
+  rational: ^0.1.11
 dev_dependencies:
   test: ^0.12.0
