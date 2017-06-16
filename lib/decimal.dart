@@ -16,7 +16,7 @@ library decimal;
 
 import 'package:rational/rational.dart';
 
-class Decimal implements Comparable {
+class Decimal implements Comparable<Decimal> {
   static Decimal parse(String value) {
     return new Decimal._fromRational(Rational.parse(value));
   }
