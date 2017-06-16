@@ -1,4 +1,8 @@
 
+# v0.1.4 (2017-06-16)
+
+- make package strong clean
+
 # v0.1.3 (2014-10-29)
 
 - add `Decimal.signum`
