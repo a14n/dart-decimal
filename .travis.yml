@@ -1,15 +1,13 @@
 language: dart
 sudo: false
 dart:
-- stable
+#- stable
 - dev
 dart_task:
 - dartfmt
 - dartanalyzer: --fatal-warnings lib
 - test: --platform vm
 - test: --platform firefox
-- test: --platform dartium
-  install_dartium: true
 matrix:
   allow_failures:
   - dart: dev
