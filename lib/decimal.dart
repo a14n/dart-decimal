@@ -26,7 +26,7 @@ class Decimal implements Comparable<Decimal> {
   Decimal._fromRational(this._rational);
 
   factory Decimal.fromInt(int value) {
-    return new Decimal._fromRational(new Rational(value));
+    return new Decimal._fromRational(new Rational(new BigInt.from(value)));
   }
 
   bool get isInteger => _rational.isInteger;

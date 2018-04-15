@@ -1,11 +1,11 @@
 name: decimal
-version: 0.1.4
+version: 0.2.0
 author: Alexandre Ardhuin <alexandre.ardhuin@gmail.com>
 description: A simple package to deal with decimal numbers
 homepage: https://github.com/a14n/dart-decimal
 environment:
-  sdk: '>=1.8.0 <2.0.0'
+  sdk: '>=2.0.0-dev.15.0 <2.0.0'
 dependencies:
-  rational: ^0.1.11
+  rational: ^0.2.0
 dev_dependencies:
   test: ^0.12.0
