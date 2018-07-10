@@ -9,7 +9,7 @@ main() {
   test('string validation', () {
     expect(() => dec('1'), returnsNormally);
     expect(() => dec('-1'), returnsNormally);
-    expect(() => dec('1.'), throwsA(anything));
+    expect(() => dec('1.'), returnsNormally);
     expect(() => dec('1.0'), returnsNormally);
   });
   test('get isInteger', () {

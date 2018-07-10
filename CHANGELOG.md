@@ -1,3 +1,7 @@
+# v0.3.0 (2018-07-10)
+
+- allow parsing of `1.`
+
 # v0.2.0 (2018-04-15)
 
 - move to Dart SDK 2.0
