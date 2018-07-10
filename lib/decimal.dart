@@ -18,7 +18,7 @@ import 'package:rational/rational.dart';
 
 class Decimal implements Comparable<Decimal> {
   static Decimal parse(String value) {
-    return new Decimal._fromRational(Rational.parse(value));
+    return Decimal._fromRational(Rational.parse(value));
   }
 
   Rational _rational;
@@ -26,7 +26,7 @@ class Decimal implements Comparable<Decimal> {
   Decimal._fromRational(this._rational);
 
   factory Decimal.fromInt(int value) {
-    return new Decimal._fromRational(new Rational(new BigInt.from(value)));
+    return Decimal._fromRational(Rational(BigInt.from(value)));
   }
 
   bool get isInteger => _rational.isInteger;
@@ -50,23 +50,23 @@ class Decimal implements Comparable<Decimal> {
 
   /** Addition operator. */
   Decimal operator +(Decimal other) =>
-      new Decimal._fromRational(_rational + other._rational);
+      Decimal._fromRational(_rational + other._rational);
 
   /** Subtraction operator. */
   Decimal operator -(Decimal other) =>
-      new Decimal._fromRational(_rational - other._rational);
+      Decimal._fromRational(_rational - other._rational);
 
   /** Multiplication operator. */
   Decimal operator *(Decimal other) =>
-      new Decimal._fromRational(_rational * other._rational);
+      Decimal._fromRational(_rational * other._rational);
 
   /** Euclidean modulo operator. */
   Decimal operator %(Decimal other) =>
-      new Decimal._fromRational(_rational % other._rational);
+      Decimal._fromRational(_rational % other._rational);
 
   /** Division operator. */
   Decimal operator /(Decimal other) =>
-      new Decimal._fromRational(_rational / other._rational);
+      Decimal._fromRational(_rational / other._rational);
 
   /**
    * Truncating division operator.
@@ -75,14 +75,14 @@ class Decimal implements Comparable<Decimal> {
    * [:(a / b).truncate():].
    */
   Decimal operator ~/(Decimal other) =>
-      new Decimal._fromRational(_rational ~/ other._rational);
+      Decimal._fromRational(_rational ~/ other._rational);
 
   /** Negate operator. */
-  Decimal operator -() => new Decimal._fromRational(-_rational);
+  Decimal operator -() => Decimal._fromRational(-_rational);
 
   /** Return the remainder from dividing this [num] by [other]. */
   Decimal remainder(Decimal other) =>
-      new Decimal._fromRational(_rational.remainder(other._rational));
+      Decimal._fromRational(_rational.remainder(other._rational));
 
   /** Relational less than operator. */
   bool operator <(Decimal other) => _rational < other._rational;
@@ -103,7 +103,7 @@ class Decimal implements Comparable<Decimal> {
   bool get isInfinite => _rational.isInfinite;
 
   /** Returns the absolute value of this [num]. */
-  Decimal abs() => new Decimal._fromRational(_rational.abs());
+  Decimal abs() => Decimal._fromRational(_rational.abs());
 
   /**
    * The signum function value of this [num].
@@ -113,10 +113,10 @@ class Decimal implements Comparable<Decimal> {
   int get signum => _rational.signum;
 
   /** Returns the greatest integer value no greater than this [num]. */
-  Decimal floor() => new Decimal._fromRational(_rational.floor());
+  Decimal floor() => Decimal._fromRational(_rational.floor());
 
   /** Returns the least integer value that is no smaller than this [num]. */
-  Decimal ceil() => new Decimal._fromRational(_rational.ceil());
+  Decimal ceil() => Decimal._fromRational(_rational.ceil());
 
   /**
    * Returns the integer value closest to this [num].
@@ -124,13 +124,13 @@ class Decimal implements Comparable<Decimal> {
    * Rounds away from zero when there is no closest integer:
    *  [:(3.5).round() == 4:] and [:(-3.5).round() == -4:].
    */
-  Decimal round() => new Decimal._fromRational(_rational.round());
+  Decimal round() => Decimal._fromRational(_rational.round());
 
   /**
    * Returns the integer value obtained by discarding any fractional
    * digits from this [num].
    */
-  Decimal truncate() => new Decimal._fromRational(_rational.truncate());
+  Decimal truncate() => Decimal._fromRational(_rational.truncate());
 
   /**
    * Returns the integer value closest to `this`.
@@ -169,7 +169,7 @@ class Decimal implements Comparable<Decimal> {
    * is done using [compareTo] and therefore takes [:-0.0:] into account.
    */
   Decimal clamp(Decimal lowerLimit, Decimal upperLimit) =>
-      new Decimal._fromRational(
+      Decimal._fromRational(
           _rational.clamp(lowerLimit._rational, upperLimit._rational));
 
   /** Truncates this [num] to an integer and returns the result as an [int]. */
