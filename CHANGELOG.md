@@ -1,3 +1,7 @@
+# v0.3.1 (2018-07-10)
+
+- make `Decimal.parse` a factory constructor.
+
 # v0.3.0 (2018-07-10)
 
 - allow parsing of `1.`

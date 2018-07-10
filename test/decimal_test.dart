@@ -5,7 +5,7 @@ import 'package:decimal/decimal.dart';
 
 Decimal dec(String value) => Decimal.parse(value);
 
-main() {
+void main() {
   test('string validation', () {
     expect(() => dec('1'), returnsNormally);
     expect(() => dec('-1'), returnsNormally);
@@ -29,16 +29,16 @@ main() {
     expect(dec('1') != (dec('2')), equals(true));
   });
   test('toString()', () {
-    [
+    for (final n in [
       '0',
       '1',
       '-1',
       '-1.1',
       '23',
       '31878018903828899277492024491376690701584023926880.1'
-    ].forEach((String n) {
+    ]) {
       expect(dec(n).toString(), equals(n));
-    });
+    }
     expect((dec('1') / dec('3')).toString(), equals('0.3333333333'));
     expect(dec('9.9').toString(), equals('9.9'));
     expect(
@@ -205,18 +205,18 @@ main() {
     expect(dec('-2').toDouble(), equals(-2.0));
   });
   test('hasFinitePrecision', () {
-    [
+    for (final d in [
       dec('100'),
       dec('100.100'),
       dec('1') / dec('5'),
       (dec('1') / dec('3')) * dec('3'),
       dec('0.00000000000000000000001')
-    ].forEach((Decimal d) {
+    ]) {
       expect(d.hasFinitePrecision, isTrue);
-    });
-    [dec('1') / dec('3')].forEach((Decimal d) {
+    }
+    for (final d in [dec('1') / dec('3')]) {
       expect(d.hasFinitePrecision, isFalse);
-    });
+    }
   });
   test('precision', () {
     expect(dec('100').precision, equals(3));
@@ -237,28 +237,28 @@ main() {
     expect(() => (dec('1') / dec('3')).scale, throwsA(anything));
   });
   test('toStringAsFixed(int fractionDigits)', () {
-    [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
-      [0, 1, 5, 10].forEach((p) {
+    for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
+      for (final p in [0, 1, 5, 10]) {
         expect(
             dec(n.toString()).toStringAsFixed(p), equals(n.toStringAsFixed(p)));
-      });
-    });
+      }
+    }
   });
   test('toStringAsExponential(int fractionDigits)', () {
-    [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
-      [1, 5, 10].forEach((p) {
+    for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
+      for (final p in [1, 5, 10]) {
         expect(dec(n.toString()).toStringAsExponential(p),
             equals(n.toStringAsExponential(p)));
-      });
-    });
+      }
+    }
   });
   test('toStringAsPrecision(int precision)', () {
-    [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235].forEach((num n) {
-      [1, 5, 10].forEach((p) {
+    for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
+      for (final p in [1, 5, 10]) {
         expect(dec(n.toString()).toStringAsPrecision(p),
             equals(n.toStringAsPrecision(p)));
-      });
-    });
+      }
+    }
   });
   test('issue #13', () {
     expect(
