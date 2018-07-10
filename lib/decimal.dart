@@ -18,6 +18,9 @@ import 'package:rational/rational.dart';
 
 class Decimal implements Comparable<Decimal> {
   static Decimal parse(String value) {
+    if (value.isNotEmpty && value.endsWith(".")){
+      value = value.substring(0, value.length -1);
+    }
     return new Decimal._fromRational(Rational.parse(value));
   }
 
