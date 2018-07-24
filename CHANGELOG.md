@@ -1,3 +1,7 @@
+# 0.3.2 (2018-07-24)
+
+- migration to Dart 2.
+
 # v0.3.1 (2018-07-10)
 
 - make `Decimal.parse` a factory constructor.

@@ -20,7 +20,7 @@ To use this library in your code :
 
 ```yaml
 dependencies:
-  decimal: ^0.2.0
+  decimal: ^0.3.0
 ```
 
 * add import in your `dart` code :
