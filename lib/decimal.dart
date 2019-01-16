@@ -25,6 +25,14 @@ class Decimal implements Comparable<Decimal> {
 
   Decimal._fromRational(this._rational);
 
+  static Decimal tryParse(String value) {
+    try {
+      return Decimal.parse(value);
+    } on FormatException {
+      return null;
+    }
+  }
+
   Rational _rational;
 
   bool get isInteger => _rational.isInteger;

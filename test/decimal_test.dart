@@ -6,6 +6,10 @@ import 'package:decimal/decimal.dart';
 Decimal dec(String value) => Decimal.parse(value);
 
 void main() {
+  test('tryParse', () {
+    expect(Decimal.tryParse('1'), dec('1'));
+    expect(Decimal.tryParse('a'), null);
+  });
   test('string validation', () {
     expect(() => dec('1'), returnsNormally);
     expect(() => dec('-1'), returnsNormally);

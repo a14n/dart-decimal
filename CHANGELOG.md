@@ -1,3 +1,7 @@
+# 0.3.3 (2019-01-16)
+
+- add `Decimal.tryParse`.
+
 # 0.3.2 (2018-07-24)
 
 - migration to Dart 2.

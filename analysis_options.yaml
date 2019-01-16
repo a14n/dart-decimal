@@ -78,7 +78,7 @@ linter:
     - prefer_const_constructors_in_immutables
     - prefer_const_declarations
     - prefer_const_literals_to_create_immutables
-    - prefer_constructors_over_static_methods
+    # - prefer_constructors_over_static_methods # not in Effective Dart any more 2019013
     - prefer_contains
     - prefer_equal_for_default_values
     - prefer_expression_function_bodies

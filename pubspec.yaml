@@ -1,5 +1,5 @@
 name: decimal
-version: 0.3.2
+version: 0.3.3
 author: Alexandre Ardhuin <alexandre.ardhuin@gmail.com>
 description: >
   The decimal package allows you to deal with decimal numbers without loosing
