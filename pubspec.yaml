@@ -1,13 +1,13 @@
-name: decimal
-version: 0.3.3
-author: Alexandre Ardhuin <alexandre.ardhuin@gmail.com>
-description: >
+name:             decimal
+version:          0.3.3
+author:           Alexandre Ardhuin <alexandre.ardhuin@gmail.com>
+description:      >
   The decimal package allows you to deal with decimal numbers without loosing
   precision.
-homepage: https://github.com/a14n/dart-decimal
+homepage:         https://github.com/a14n/dart-decimal
 environment:
-  sdk: '>=2.0.0-dev.66.0 <3.0.0'
+  sdk:            '>=2.0.0-dev.66.0 <3.0.0'
 dependencies:
-  rational: ^0.3.0
+  rational:       ^0.3.0
 dev_dependencies:
-  test: ^1.2.0
+  test:           ^1.2.0
