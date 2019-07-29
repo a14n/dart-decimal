@@ -36,12 +36,11 @@ class Decimal implements Comparable<Decimal> {
     }
   }
 
-  Decimal get inverse => Decimal._fromRational(
-      Rational(_rational.denominator, _rational.numerator));
-
   Rational _rational;
 
   bool get isInteger => _rational.isInteger;
+
+  Decimal get inverse => Decimal._fromRational(_rational.inverse);
 
   @override
   bool operator ==(Object other) =>

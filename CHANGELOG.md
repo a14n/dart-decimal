@@ -1,3 +1,8 @@
+# 0.3.4 (2019-07-29)
+
+- add `Decimal.zero` and `Decimal.one`.
+- add `Decimal.inverse`.
+
 # 0.3.3 (2019-01-16)
 
 - add `Decimal.tryParse`.

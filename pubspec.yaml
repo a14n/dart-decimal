@@ -1,5 +1,5 @@
 name: decimal
-version: 0.3.3
+version: 0.3.4
 author: Alexandre Ardhuin <alexandre.ardhuin@gmail.com>
 description: >
   The decimal package allows you to deal with decimal numbers without loosing
@@ -8,6 +8,6 @@ homepage: https://github.com/a14n/dart-decimal
 environment:
   sdk: '>=2.0.0-dev.66.0 <3.0.0'
 dependencies:
-  rational: ^0.3.0
+  rational: ^0.3.5
 dev_dependencies:
   test: ^1.2.0

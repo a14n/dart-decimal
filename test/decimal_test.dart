@@ -24,6 +24,11 @@ void main() {
     expect(dec('1.2').isInteger, equals(false));
     expect(dec('-1.21').isInteger, equals(false));
   });
+  test('get inverse', () {
+    expect(dec('1').inverse, dec('1'));
+    expect(dec('0.1').inverse, dec('10'));
+    expect(dec('200').inverse, dec('0.005'));
+  });
   test('operator ==(Decimal other)', () {
     expect(dec('1') == (dec('1')), equals(true));
     expect(dec('1') == (dec('2')), equals(false));
@@ -285,13 +290,10 @@ void main() {
     expect(
         Decimal.parse('21.962962546543768').toString(), '21.962962546543768');
   });
-  test("zero", () {
+  test('zero', () {
     expect(Decimal.zero, Decimal.fromInt(0));
   });
-  test("one", () {
+  test('one', () {
     expect(Decimal.one, Decimal.fromInt(1));
-  });
-  test("inverse", () {
-    expect(Decimal.tryParse('0.5').inverse, Decimal.fromInt(2));
   });
 }
