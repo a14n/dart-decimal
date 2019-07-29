@@ -243,8 +243,7 @@ void main() {
   test('toStringAsFixed(int fractionDigits)', () {
     for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
       for (final p in [0, 1, 5, 10]) {
-        expect(
-            dec(n.toString()).toStringAsFixed(p), equals(n.toStringAsFixed(p)));
+        expect(dec(n.toString()).toStringAsFixed(p), n.toStringAsFixed(p));
       }
     }
   });
@@ -252,17 +251,35 @@ void main() {
     for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
       for (final p in [1, 5, 10]) {
         expect(dec(n.toString()).toStringAsExponential(p),
-            equals(n.toStringAsExponential(p)));
+            n.toStringAsExponential(p));
       }
     }
   });
   test('toStringAsPrecision(int precision)', () {
-    for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
-      for (final p in [1, 5, 10]) {
-        expect(dec(n.toString()).toStringAsPrecision(p),
-            equals(n.toStringAsPrecision(p)));
-      }
-    }
+    expect(dec('0').toStringAsPrecision(1), '0');
+    expect(dec('0').toStringAsPrecision(5), '0.0000');
+    expect(dec('0').toStringAsPrecision(10), '0.000000000');
+    expect(dec('1').toStringAsPrecision(1), '1');
+    expect(dec('1').toStringAsPrecision(5), '1.0000');
+    expect(dec('1').toStringAsPrecision(10), '1.000000000');
+    expect(dec('23').toStringAsPrecision(1), '20');
+    expect(dec('23').toStringAsPrecision(5), '23.000');
+    expect(dec('23').toStringAsPrecision(10), '23.00000000');
+    expect(dec('2.2').toStringAsPrecision(1), '2');
+    expect(dec('2.2').toStringAsPrecision(5), '2.2000');
+    expect(dec('2.2').toStringAsPrecision(10), '2.200000000');
+    expect(dec('2.499999').toStringAsPrecision(1), '2');
+    expect(dec('2.499999').toStringAsPrecision(5), '2.5000');
+    expect(dec('2.499999').toStringAsPrecision(10), '2.499999000');
+    expect(dec('2.5').toStringAsPrecision(1), '3');
+    expect(dec('2.5').toStringAsPrecision(5), '2.5000');
+    expect(dec('2.5').toStringAsPrecision(10), '2.500000000');
+    expect(dec('2.7').toStringAsPrecision(1), '3');
+    expect(dec('2.7').toStringAsPrecision(5), '2.7000');
+    expect(dec('2.7').toStringAsPrecision(10), '2.700000000');
+    expect(dec('1.235').toStringAsPrecision(1), '1');
+    expect(dec('1.235').toStringAsPrecision(5), '1.2350');
+    expect(dec('1.235').toStringAsPrecision(10), '1.235000000');
   });
   test('issue #13', () {
     expect(
