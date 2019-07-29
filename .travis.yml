@@ -1,7 +1,7 @@
 language: dart
 sudo: false
 dart:
-#- stable
+- stable
 - dev
 dart_task:
 - dartfmt
