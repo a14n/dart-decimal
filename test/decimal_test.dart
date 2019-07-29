@@ -268,4 +268,13 @@ void main() {
     expect(
         Decimal.parse('21.962962546543768').toString(), '21.962962546543768');
   });
+  test("zero", () {
+    expect(Decimal.zero, Decimal.fromInt(0));
+  });
+  test("one", () {
+    expect(Decimal.one, Decimal.fromInt(1));
+  });
+  test("inverse", () {
+    expect(Decimal.tryParse('0.5').inverse, Decimal.fromInt(2));
+  });
 }

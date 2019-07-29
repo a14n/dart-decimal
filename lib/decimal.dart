@@ -25,6 +25,9 @@ class Decimal implements Comparable<Decimal> {
 
   Decimal._fromRational(this._rational);
 
+  static Decimal zero = Decimal.fromInt(0);
+  static Decimal one = Decimal.fromInt(1);
+
   static Decimal tryParse(String value) {
     try {
       return Decimal.parse(value);
@@ -32,6 +35,9 @@ class Decimal implements Comparable<Decimal> {
       return null;
     }
   }
+
+  Decimal get inverse => Decimal._fromRational(
+      Rational(_rational.denominator, _rational.numerator));
 
   Rational _rational;
 
