@@ -1,3 +1,7 @@
+# 0.3.5 (2019-09-02)
+
+- [add `Decimal.pow`](https://github.com/a14n/dart-decimal/issues/24).
+
 # 0.3.4 (2019-07-29)
 
 - add `Decimal.zero` and `Decimal.one`.
