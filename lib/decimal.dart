@@ -28,7 +28,7 @@ class Decimal implements Comparable<Decimal> {
   static Decimal zero = Decimal.fromInt(0);
   static Decimal one = Decimal.fromInt(1);
 
-  static Decimal tryParse(String value) {
+  static Decimal? tryParse(String value) {
     try {
       return Decimal.parse(value);
     } on FormatException {
@@ -195,7 +195,7 @@ class Decimal implements Comparable<Decimal> {
 
   /// Converts a [num] to a string in decimal exponential notation with
   /// [fractionDigits] digits after the decimal point.
-  String toStringAsExponential([int fractionDigits]) =>
+  String toStringAsExponential([int? fractionDigits]) =>
       _rational.toStringAsExponential(fractionDigits);
 
   /// Converts a [num] to a string representation with [precision] significant
