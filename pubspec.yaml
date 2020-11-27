@@ -1,21 +1,14 @@
 name: decimal
-version: 0.3.5
-author: Alexandre Ardhuin <alexandre.ardhuin@gmail.com>
+version: 1.0.0-nullsafety
 description: >
   The decimal package allows you to deal with decimal numbers without loosing
   precision.
-homepage: https://github.com/a14n/dart-decimal
+repository: https://github.com/a14n/dart-decimal
 environment:
   sdk: ">=2.12.0-0 <3.0.0"
 
 dependencies:
-  rational: ^0.3.6
-
-dependency_overrides:
-  rational:
-    git:
-      url: https://github.com/acoutts/dart-rational.git
-      ref: nullsafety
+  rational: ^1.0.0-nullsafety
 
 dev_dependencies:
   test: ^1.16.0-nullsafety.12

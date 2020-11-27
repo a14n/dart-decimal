@@ -1,3 +1,7 @@
+# 1.0.0-nullsafety (2020-11-27)
+
+- Migrate to nullsafety.
+
 # 0.3.5 (2019-09-02)
 
 - [add `Decimal.pow`](https://github.com/a14n/dart-decimal/issues/24).
