@@ -1,3 +1,7 @@
+# 1.0.0 (2021-02-25)
+
+- Stable null safety release.
+
 # 1.0.0-nullsafety (2020-11-27)
 
 - Migrate to nullsafety.
