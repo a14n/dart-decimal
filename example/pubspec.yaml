@@ -3,7 +3,7 @@ version: 0.0.1
 description: Example app for the decimal package.
 homepage: https://github.com/a14n/dart-decimal
 environment:
-  sdk: ">=2.12.0-0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 publish_to: none
 
 dependencies:

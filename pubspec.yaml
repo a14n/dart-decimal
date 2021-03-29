@@ -1,11 +1,11 @@
 name: decimal
-version: 1.0.0
+version: 1.0.0+1
 description: >
-  The decimal package allows you to deal with decimal numbers without loosing
+  The decimal package allows you to deal with decimal numbers without losing
   precision.
 repository: https://github.com/a14n/dart-decimal
 environment:
-  sdk: ">=2.12.0-0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   rational: ^1.0.0

@@ -1,3 +1,7 @@
+# 1.0.0+1 (2021-03-29)
+
+- Fix typo in the description of the package.
+
 # 1.0.0 (2021-02-25)
 
 - Stable null safety release.
