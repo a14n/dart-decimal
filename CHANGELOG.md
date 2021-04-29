@@ -1,3 +1,7 @@
+# 1.1.0 (2021-04-29)
+
+- Allow negative value as exponent of `pow`.
+
 # 1.0.0+1 (2021-03-29)
 
 - Fix typo in the description of the package.
