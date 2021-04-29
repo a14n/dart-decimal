@@ -1,6 +1,6 @@
 # Dart Decimals
 
-[![Build Status](https://travis-ci.org/a14n/dart-decimal.svg?branch=master)](https://travis-ci.org/a14n/dart-decimal)
+[![Build Status](https://github.com/a14n/dart-decimal/actions/workflows/dart.yml/badge.svg)](https://github.com/a14n/dart-decimal/actions/workflows/dart.yml)
 
 This project enable to make computations on decimal numbers without loosing precision like double operations.
 
