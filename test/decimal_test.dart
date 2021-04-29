@@ -300,11 +300,17 @@ void main() {
     expect(dec('100').pow(0), equals(dec('1')));
     expect(dec('100').pow(1), equals(dec('100')));
     expect(dec('100').pow(2), equals(dec('10000')));
+    expect(dec('100').pow(-1), equals(dec('0.01')));
+    expect(dec('100').pow(-2), equals(dec('0.0001')));
     expect(dec('0.1').pow(0), equals(dec('1')));
     expect(dec('0.1').pow(1), equals(dec('0.1')));
     expect(dec('0.1').pow(2), equals(dec('0.01')));
+    expect(dec('0.1').pow(-1), equals(dec('10')));
+    expect(dec('0.1').pow(-2), equals(dec('100')));
     expect(dec('-1').pow(0), equals(dec('1')));
     expect(dec('-1').pow(1), equals(dec('-1')));
     expect(dec('-1').pow(2), equals(dec('1')));
+    expect(dec('-1').pow(-1), equals(dec('-1')));
+    expect(dec('-1').pow(-2), equals(dec('1')));
   });
 }

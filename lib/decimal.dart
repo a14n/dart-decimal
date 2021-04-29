@@ -206,7 +206,5 @@ class Decimal implements Comparable<Decimal> {
   /// Returns `this` to the power of [exponent].
   ///
   /// Returns [one] if the [exponent] equals `0`.
-  ///
-  /// The [exponent] must otherwise be positive.
   Decimal pow(int exponent) => Decimal._fromRational(_rational.pow(exponent));
 }
