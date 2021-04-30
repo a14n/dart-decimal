@@ -28,7 +28,7 @@ jobs:
         run: dart format --output=none --set-exit-if-changed .
 
       - name: Analyze project source
-        run: dart analyze --fatal-warnings
+        run: dart analyze --fatal-warnings --fatal-lints
 
       - name: Run VM tests
         run: dart test --platform vm
