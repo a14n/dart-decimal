@@ -23,6 +23,9 @@ class Decimal implements Comparable<Decimal> {
   factory Decimal.fromInt(int value) =>
       Decimal._fromRational(Rational(BigInt.from(value)));
 
+  factory Decimal.fromDouble(double value) =>
+      Decimal._fromRational(Rational.parse(value.toString()));
+
   Decimal._fromRational(this._rational);
 
   static Decimal zero = Decimal.fromInt(0);
