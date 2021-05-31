@@ -1,3 +1,7 @@
+# 1.2.0 (2021-05-31)
+
+- Add `DecimalIntl` to allow formatting with [intl](https://pub.dev/packages/intl) package.
+
 # 1.1.0 (2021-04-29)
 
 - Allow negative value as exponent of `pow`.
