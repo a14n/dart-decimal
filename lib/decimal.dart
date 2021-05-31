@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library decimal;
-
 import 'package:rational/rational.dart';
 
 class Decimal implements Comparable<Decimal> {
