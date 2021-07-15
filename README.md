@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/a14n/dart-decimal/actions/workflows/dart.yml/badge.svg)](https://github.com/a14n/dart-decimal/actions/workflows/dart.yml)
 
-This project enable to make computations on decimal numbers without loosing precision like double operations.
+This project enable to make computations on decimal numbers without losing precision like double operations.
 
 For instance :
 
