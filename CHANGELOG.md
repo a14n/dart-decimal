@@ -1,3 +1,7 @@
+# 1.3.0 (2021-07-21)
+
+- Add `Decimal.fromBigInt`.
+
 # 1.2.0 (2021-05-31)
 
 - Add `DecimalIntl` to allow formatting with [intl](https://pub.dev/packages/intl) package.
