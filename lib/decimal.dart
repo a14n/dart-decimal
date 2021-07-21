@@ -18,8 +18,10 @@ class Decimal implements Comparable<Decimal> {
   factory Decimal.parse(String value) =>
       Decimal._fromRational(Rational.parse(value));
 
-  factory Decimal.fromInt(int value) =>
-      Decimal._fromRational(Rational(BigInt.from(value)));
+  factory Decimal.fromBigInt(BigInt value) =>
+      Decimal._fromRational(Rational(value));
+
+  factory Decimal.fromInt(int value) => Decimal.fromBigInt(BigInt.from(value));
 
   Decimal._fromRational(this._rational);
 
