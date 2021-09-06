@@ -34,7 +34,7 @@ import 'package:decimal/decimal.dart';
 _Hint_ : To make your code shorter you can define a shortcut for Decimal.parse :
 
 ```dart
-final d = Decimal.parse;
+final d = (String s) => Decimal.parse(s);
 d('0.2') + d('0.1'); // => 0.3
 ```
 
