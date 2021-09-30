@@ -36,7 +36,7 @@ class Decimal implements Comparable<Decimal> {
     }
   }
 
-  Rational _rational;
+  final Rational _rational;
 
   bool get isInteger => _rational.isInteger;
 
