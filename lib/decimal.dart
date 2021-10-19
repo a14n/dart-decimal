@@ -208,3 +208,8 @@ class Decimal implements Comparable<Decimal> {
   /// Returns [one] if the [exponent] equals `0`.
   Decimal pow(int exponent) => Decimal._fromRational(_rational.pow(exponent));
 }
+
+extension NumToDecimal on num {
+  /// This number as [Decimal]
+  Decimal toDecimal() => Decimal.parse(toString());
+}

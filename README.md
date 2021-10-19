@@ -31,11 +31,10 @@ import 'package:decimal/decimal.dart';
 
 * Start computing using `Decimal.parse('1.23')`.
 
-_Hint_ : To make your code shorter you can define a shortcut for Decimal.parse :
-
+* You can also use `toDecimal()` extension on `num` type:
 ```dart
-final d = (String s) => Decimal.parse(s);
-d('0.2') + d('0.1'); // => 0.3
+final pointOne = 0.1.toDecimal();
+final d = (0.2 + pointOne).toDecimal();
 ```
 
 ## Formatting with intl
