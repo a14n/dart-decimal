@@ -296,6 +296,9 @@ void main() {
   test('one', () {
     expectThat(Decimal.one).equals(Decimal.fromInt(1));
   });
+  test('ten', () {
+    expectThat(Decimal.ten).equals(Decimal.fromInt(10));
+  });
   test('pow', () {
     expectThat(dec('100').pow(0)).equals(dec('1'));
     expectThat(dec('100').pow(1)).equals(dec('100'));

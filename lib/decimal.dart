@@ -27,6 +27,7 @@ class Decimal implements Comparable<Decimal> {
 
   static Decimal zero = Decimal.fromInt(0);
   static Decimal one = Decimal.fromInt(1);
+  static Decimal ten = Decimal.fromInt(10);
 
   static Decimal? tryParse(String value) {
     try {
