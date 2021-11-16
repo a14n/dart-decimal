@@ -207,6 +207,11 @@ void main() {
     expectThat(dec('-2.51').toInt()).equals(-2);
     expectThat(dec('-2').toInt()).equals(-2);
   });
+  test('toBigInt()', () {
+    expectThat(dec('2.51').toBigInt()).equals(BigInt.from(2));
+    expectThat(dec('-2.51').toBigInt()).equals(BigInt.from(-2));
+    expectThat(dec('-2').toBigInt()).equals(BigInt.from(-2));
+  });
   test('toDouble()', () {
     expectThat(dec('2.51').toDouble()).equals(2.51);
     expectThat(dec('-2.51').toDouble()).equals(-2.51);

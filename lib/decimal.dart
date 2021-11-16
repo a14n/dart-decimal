@@ -163,6 +163,10 @@ class Decimal implements Comparable<Decimal> {
   /// Truncates this [num] to an integer and returns the result as an [int].
   int toInt() => _rational.toInt();
 
+  /// Truncates this [num] to a big integer and returns the result as an
+  /// [BigInt].
+  BigInt toBigInt() => _rational.toBigInt();
+
   /// Return this [num] as a [double].
   ///
   /// If the number is not representable as a [double], an approximation is
