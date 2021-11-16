@@ -1,3 +1,8 @@
+# 1.4.0 (2021-11-16)
+
+- Add `Decimal.ten`.
+- Add `Decimal.toBigInt`.
+
 # 1.3.0 (2021-07-21)
 
 - Add `Decimal.fromBigInt`.
