@@ -1,3 +1,7 @@
+# 1.5.0 (2021-11-17)
+
+- Support json serialization as String with `Decimal.fromJson`/`Decimal.toJson`.
+
 # 1.4.0 (2021-11-16)
 
 - Add `Decimal.ten`.
