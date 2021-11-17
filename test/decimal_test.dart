@@ -1,5 +1,7 @@
 library tests;
 
+import 'dart:convert';
+
 import 'package:decimal/decimal.dart';
 import 'package:expector/expector.dart';
 import 'package:test/test.dart' show test;
@@ -320,5 +322,21 @@ void main() {
     expectThat(dec('-1').pow(2)).equals(dec('1'));
     expectThat(dec('-1').pow(-1)).equals(dec('-1'));
     expectThat(dec('-1').pow(-2)).equals(dec('1'));
+  });
+  test('fromJson', () async {
+    expectThat(Decimal.fromJson('1')).equals(Decimal.one);
+    await expectThat(() => Decimal.fromJson('-1')).returnsNormally();
+    await expectThat(() => Decimal.fromJson('1.')).returnsNormally();
+    await expectThat(() => Decimal.fromJson('1.0')).returnsNormally();
+  });
+  test('toJson', () {
+    const encoder = JsonEncoder();
+    expectThat(encoder.convert({
+      'zero': Decimal.zero,
+      'one': Decimal.one,
+    })).equals('{'
+        '"zero":"${Decimal.zero}",'
+        '"one":"${Decimal.one}"'
+        '}');
   });
 }
