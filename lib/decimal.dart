@@ -215,6 +215,6 @@ class Decimal implements Comparable<Decimal> {
   /// Returns [one] if the [exponent] equals `0`.
   Decimal pow(int exponent) => Decimal._fromRational(_rational.pow(exponent));
 
-  /// Convert `this` to string when calling by encode methods.
+  /// Convert `this` to string when called by encode methods.
   String toJson() => toString();
 }

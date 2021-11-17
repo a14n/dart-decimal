@@ -334,9 +334,11 @@ void main() {
     expectThat(encoder.convert({
       'zero': Decimal.zero,
       'one': Decimal.one,
-    })).equals('{'
-        '"zero":"${Decimal.zero}",'
-        '"one":"${Decimal.one}"'
-        '}');
+    })).equals(
+      '{'
+      '"zero":"${Decimal.zero}",'
+      '"one":"${Decimal.one}"'
+      '}',
+    );
   });
 }
