@@ -23,7 +23,7 @@ class Decimal implements Comparable<Decimal> {
 
   factory Decimal.fromInt(int value) => Decimal.fromBigInt(BigInt.from(value));
 
-  factory Decimal.fromJson(Object? value) => Decimal.parse(value.toString());
+  factory Decimal.fromJson(String value) = Decimal.parse;
 
   Decimal._fromRational(this._rational);
 
