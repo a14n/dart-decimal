@@ -52,8 +52,18 @@ class Decimal implements Comparable<Decimal> {
   @override
   int get hashCode => _rational.hashCode;
 
+  /// Return a [String] representation of this decimal.
+  ///
+  /// **WARNING**: when [hasFinitePrecision] is `false` the decimal
+  /// representation is truncated to the 10th decimal unit.
   @override
   String toString() => _rational.toDecimalString();
+
+  /// Convert `this` to String by using [toString].
+  ///
+  /// **WARNING**: when [hasFinitePrecision] is `false` the decimal
+  /// representation is truncated to the 10th decimal unit.
+  String toJson() => toString();
 
   // implementation of Comparable
 
@@ -214,7 +224,4 @@ class Decimal implements Comparable<Decimal> {
   ///
   /// Returns [one] if the [exponent] equals `0`.
   Decimal pow(int exponent) => Decimal._fromRational(_rational.pow(exponent));
-
-  /// Convert `this` to string when called by encode methods.
-  String toJson() => toString();
 }
