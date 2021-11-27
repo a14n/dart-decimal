@@ -4,7 +4,8 @@ import 'dart:convert';
 
 import 'package:decimal/decimal.dart';
 import 'package:expector/expector.dart';
-import 'package:test/test.dart' show test;
+import 'package:rational/rational.dart';
+import 'package:test/test.dart' show group, test;
 
 Decimal dec(String value) => Decimal.parse(value);
 
@@ -28,17 +29,17 @@ void main() {
     expectThat(dec('-1.21').isInteger).isFalse;
   });
   test('get inverse', () {
-    expectThat(dec('1').inverse).equals(dec('1'));
-    expectThat(dec('0.1').inverse).equals(dec('10'));
-    expectThat(dec('200').inverse).equals(dec('0.005'));
+    expectThat(dec('1').inverse).equals(dec('1').toRational());
+    expectThat(dec('0.1').inverse).equals(dec('10').toRational());
+    expectThat(dec('200').inverse).equals(dec('0.005').toRational());
   });
   test('operator ==(Decimal other)', () {
-    expectThat(dec('1') == (dec('1'))).isTrue;
-    expectThat(dec('1') == (dec('2'))).isFalse;
-    expectThat(dec('1') == (dec('1.0'))).isTrue;
-    expectThat(dec('1') == (dec('2.0'))).isFalse;
-    expectThat(dec('1') != (dec('1'))).isFalse;
-    expectThat(dec('1') != (dec('2'))).isTrue;
+    expectThat(dec('1') == dec('1')).isTrue;
+    expectThat(dec('1') == dec('2')).isFalse;
+    expectThat(dec('1') == dec('1.0')).isTrue;
+    expectThat(dec('1') == dec('2.0')).isFalse;
+    expectThat(dec('1') != dec('1')).isFalse;
+    expectThat(dec('1') != dec('2')).isTrue;
   });
   test('toString()', () {
     for (final n in [
@@ -51,7 +52,7 @@ void main() {
     ]) {
       expectThat(dec(n).toString()).equals(n);
     }
-    expectThat((dec('1') / dec('3')).toString()).equals('0.3333333333');
+    expectThat((dec('1') / dec('3')).toString()).equals('1/3');
     expectThat(dec('9.9').toString()).equals('9.9');
     expectThat((dec('1.0000000000000000000000000000000000000000000000001') *
                 dec('1.0000000000000000000000000000000000000000000000001'))
@@ -66,68 +67,65 @@ void main() {
     expectThat(dec('1').compareTo(dec('0.9'))).equals(1);
   });
   test('operator +(Decimal other)', () {
-    expectThat((dec('1') + dec('1')).toString()).equals('2');
-    expectThat((dec('1.1') + dec('1')).toString()).equals('2.1');
-    expectThat((dec('1.1') + dec('0.9')).toString()).equals('2');
-    expectThat((dec('31878018903828899277492024491376690701584023926880.0') +
-                dec('0.9'))
-            .toString())
-        .equals('31878018903828899277492024491376690701584023926880.9');
+    expectThat(dec('1') + dec('1')).equals(dec('2'));
+    expectThat(dec('1.1') + dec('1')).equals(dec('2.1'));
+    expectThat(dec('1.1') + dec('0.9')).equals(dec('2'));
+    expectThat(dec('31878018903828899277492024491376690701584023926880.0') +
+            dec('0.9'))
+        .equals(dec('31878018903828899277492024491376690701584023926880.9'));
   });
   test('operator -(Decimal other)', () {
-    expectThat((dec('1') - dec('1')).toString()).equals('0');
-    expectThat((dec('1.1') - dec('1')).toString()).equals('0.1');
-    expectThat((dec('0.1') - dec('1.1')).toString()).equals('-1');
-    expectThat((dec('31878018903828899277492024491376690701584023926880.0') -
-                dec('0.9'))
-            .toString())
-        .equals('31878018903828899277492024491376690701584023926879.1');
+    expectThat(dec('1') - dec('1')).equals(dec('0'));
+    expectThat(dec('1.1') - dec('1')).equals(dec('0.1'));
+    expectThat(dec('0.1') - dec('1.1')).equals(dec('-1'));
+    expectThat(dec('31878018903828899277492024491376690701584023926880.0') -
+            dec('0.9'))
+        .equals(dec('31878018903828899277492024491376690701584023926879.1'));
   });
   test('operator *(Decimal other)', () {
-    expectThat((dec('1') * dec('1')).toString()).equals('1');
-    expectThat((dec('1.1') * dec('1')).toString()).equals('1.1');
-    expectThat((dec('1.1') * dec('0.1')).toString()).equals('0.11');
-    expectThat((dec('1.1') * dec('0')).toString()).equals('0');
-    expectThat((dec('31878018903828899277492024491376690701584023926880.0') *
-                dec('10'))
-            .toString())
-        .equals('318780189038288992774920244913766907015840239268800');
+    expectThat(dec('1') * dec('1')).equals(dec('1'));
+    expectThat(dec('1.1') * dec('1')).equals(dec('1.1'));
+    expectThat(dec('1.1') * dec('0.1')).equals(dec('0.11'));
+    expectThat(dec('1.1') * dec('0')).equals(dec('0'));
+    expectThat(dec('31878018903828899277492024491376690701584023926880.0') *
+            dec('10'))
+        .equals(dec('318780189038288992774920244913766907015840239268800'));
   });
   test('operator %(Decimal other)', () {
-    expectThat((dec('2') % dec('1')).toString()).equals('0');
-    expectThat((dec('0') % dec('1')).toString()).equals('0');
-    expectThat((dec('8.9') % dec('1.1')).toString()).equals('0.1');
-    expectThat((dec('-1.2') % dec('0.5')).toString()).equals('0.3');
-    expectThat((dec('-1.2') % dec('-0.5')).toString()).equals('0.3');
+    expectThat(dec('2') % dec('1')).equals(dec('0'));
+    expectThat(dec('0') % dec('1')).equals(dec('0'));
+    expectThat(dec('8.9') % dec('1.1')).equals(dec('0.1'));
+    expectThat(dec('-1.2') % dec('0.5')).equals(dec('0.3'));
+    expectThat(dec('-1.2') % dec('-0.5')).equals(dec('0.3'));
   });
   test('operator /(Decimal other)', () async {
     await expectThat(() => dec('1') / dec('0')).throws;
-    expectThat((dec('1') / dec('1')).toString()).equals('1');
-    expectThat((dec('1.1') / dec('1')).toString()).equals('1.1');
-    expectThat((dec('1.1') / dec('0.1')).toString()).equals('11');
-    expectThat((dec('0') / dec('0.2315')).toString()).equals('0');
-    expectThat((dec('31878018903828899277492024491376690701584023926880.0') /
-                dec('10'))
-            .toString())
-        .equals('3187801890382889927749202449137669070158402392688');
+    expectThat(dec('1') / dec('1')).equals(dec('1').toRational());
+    expectThat(dec('1.1') / dec('1')).equals(dec('1.1').toRational());
+    expectThat(dec('1.1') / dec('0.1')).equals(dec('11').toRational());
+    expectThat(dec('0') / dec('0.2315')).equals(dec('0').toRational());
+    expectThat(dec('31878018903828899277492024491376690701584023926880.0') /
+            dec('10'))
+        .equals(dec('3187801890382889927749202449137669070158402392688')
+            .toRational());
   });
   test('operator ~/(Decimal other)', () async {
     await expectThat(() => dec('1') ~/ dec('0')).throws;
-    expectThat((dec('3') ~/ dec('2')).toString()).equals('1');
-    expectThat((dec('1.1') ~/ dec('1')).toString()).equals('1');
-    expectThat((dec('1.1') ~/ dec('0.1')).toString()).equals('11');
-    expectThat((dec('0') ~/ dec('0.2315')).toString()).equals('0');
+    expectThat(dec('3') ~/ dec('2')).equals(BigInt.from(1));
+    expectThat(dec('1.1') ~/ dec('1')).equals(BigInt.from(1));
+    expectThat(dec('1.1') ~/ dec('0.1')).equals(BigInt.from(11));
+    expectThat(dec('0') ~/ dec('0.2315')).equals(BigInt.from(0));
   });
   test('operator -()', () {
-    expectThat((-dec('1')).toString()).equals('-1');
-    expectThat((-dec('-1')).toString()).equals('1');
+    expectThat(-dec('1')).equals(dec('-1'));
+    expectThat(-dec('-1')).equals(dec('1'));
   });
   test('remainder(Decimal other)', () {
-    expectThat((dec('2').remainder(dec('1'))).toString()).equals('0');
-    expectThat((dec('0').remainder(dec('1'))).toString()).equals('0');
-    expectThat((dec('8.9').remainder(dec('1.1'))).toString()).equals('0.1');
-    expectThat((dec('-1.2').remainder(dec('0.5'))).toString()).equals('-0.2');
-    expectThat((dec('-1.2').remainder(dec('-0.5'))).toString()).equals('-0.2');
+    expectThat(dec('2').remainder(dec('1'))).equals(dec('0'));
+    expectThat(dec('0').remainder(dec('1'))).equals(dec('0'));
+    expectThat(dec('8.9').remainder(dec('1.1'))).equals(dec('0.1'));
+    expectThat(dec('-1.2').remainder(dec('0.5'))).equals(dec('-0.2'));
+    expectThat(dec('-1.2').remainder(dec('-0.5'))).equals(dec('-0.2'));
   });
   test('operator <(Decimal other)', () {
     expectThat(dec('1') < dec('1')).isFalse;
@@ -153,61 +151,108 @@ void main() {
     expectThat(dec('1') >= dec('1.1')).isFalse;
     expectThat(dec('1') >= dec('0.9')).isTrue;
   });
-  test('get isNaN', () {
-    expectThat(dec('1').isNaN).isFalse;
-  });
-  test('get isNegative', () {
-    expectThat(dec('-1').isNegative).isTrue;
-    expectThat(dec('0').isNegative).isFalse;
-    expectThat(dec('1').isNegative).isFalse;
-  });
-  test('get isInfinite', () {
-    expectThat(dec('1').isInfinite).isFalse;
-  });
   test('abs()', () {
-    expectThat((dec('-1.49').abs()).toString()).equals('1.49');
-    expectThat((dec('1.498').abs()).toString()).equals('1.498');
+    expectThat(dec('-1.49').abs()).equals(dec('1.49'));
+    expectThat(dec('1.498').abs()).equals(dec('1.498'));
   });
   test('signum', () {
     expectThat(dec('-1.49').signum).equals(-1);
     expectThat(dec('1.49').signum).equals(1);
     expectThat(dec('0').signum).equals(0);
   });
-  test('floor()', () {
-    expectThat((dec('1').floor()).toString()).equals('1');
-    expectThat((dec('-1').floor()).toString()).equals('-1');
-    expectThat((dec('1.49').floor()).toString()).equals('1');
-    expectThat((dec('-1.49').floor()).toString()).equals('-2');
+  group('floor()', () {
+    test('without scale', () {
+      expectThat(dec('1').floor()).equals(dec('1'));
+      expectThat(dec('-1').floor()).equals(dec('-1'));
+      expectThat(dec('1.49').floor()).equals(dec('1'));
+      expectThat(dec('-1.49').floor()).equals(dec('-2'));
+    });
+    test('with positive scale', () {
+      expectThat(dec('1').floor(scale: 1)).equals(dec('1'));
+      expectThat(dec('-1').floor(scale: 1)).equals(dec('-1'));
+      expectThat(dec('1.49').floor(scale: 1)).equals(dec('1.4'));
+      expectThat(dec('-1.49').floor(scale: 1)).equals(dec('-1.5'));
+    });
+    test('with negative scale', () {
+      expectThat(dec('1').floor(scale: -1)).equals(dec('0'));
+      expectThat(dec('-1').floor(scale: -1)).equals(dec('-10'));
+      expectThat(dec('14.9').floor(scale: -1)).equals(dec('10'));
+      expectThat(dec('-14.9').floor(scale: -1)).equals(dec('-20'));
+    });
   });
-  test('ceil()', () {
-    expectThat((dec('1').floor()).toString()).equals('1');
-    expectThat((dec('-1').floor()).toString()).equals('-1');
-    expectThat((dec('-1.49').ceil()).toString()).equals('-1');
-    expectThat((dec('1.49').ceil()).toString()).equals('2');
+  group('ceil()', () {
+    test('without scale', () {
+      expectThat(dec('1').ceil()).equals(dec('1'));
+      expectThat(dec('-1').ceil()).equals(dec('-1'));
+      expectThat(dec('-1.49').ceil()).equals(dec('-1'));
+      expectThat(dec('1.49').ceil()).equals(dec('2'));
+    });
+    test('with positive scale', () {
+      expectThat(dec('1').ceil(scale: 1)).equals(dec('1'));
+      expectThat(dec('-1').ceil(scale: 1)).equals(dec('-1'));
+      expectThat(dec('-1.49').ceil(scale: 1)).equals(dec('-1.4'));
+      expectThat(dec('1.49').ceil(scale: 1)).equals(dec('1.5'));
+    });
+    test('with negative scale', () {
+      expectThat(dec('1').ceil(scale: -1)).equals(dec('10'));
+      expectThat(dec('-1').ceil(scale: -1)).equals(dec('0'));
+      expectThat(dec('-14.9').ceil(scale: -1)).equals(dec('-10'));
+      expectThat(dec('14.9').ceil(scale: -1)).equals(dec('20'));
+    });
   });
-  test('round()', () {
-    expectThat((dec('1.4999').round()).toString()).equals('1');
-    expectThat((dec('2.5').round()).toString()).equals('3');
-    expectThat((dec('-2.51').round()).toString()).equals('-3');
-    expectThat((dec('-2').round()).toString()).equals('-2');
+  group('round()', () {
+    test('without scale', () {
+      expectThat(dec('1.4999').round()).equals(dec('1'));
+      expectThat(dec('2.5').round()).equals(dec('3'));
+      expectThat(dec('-2.51').round()).equals(dec('-3'));
+      expectThat(dec('-2').round()).equals(dec('-2'));
+    });
+    test('with positive scale', () {
+      expectThat(dec('1.4999').round(scale: 1)).equals(dec('1.5'));
+      expectThat(dec('2.5').round(scale: 1)).equals(dec('2.5'));
+      expectThat(dec('-2.51').round(scale: 1)).equals(dec('-2.5'));
+      expectThat(dec('-2').round(scale: 1)).equals(dec('-2'));
+    });
+    test('with negative scale', () {
+      expectThat(dec('1.4999').round(scale: -1)).equals(dec('0'));
+      expectThat(dec('12.5').round(scale: -1)).equals(dec('10'));
+      expectThat(dec('-25.1').round(scale: -1)).equals(dec('-30'));
+      expectThat(dec('-24').round(scale: -1)).equals(dec('-20'));
+    });
   });
-  test('truncate()', () {
-    expectThat((dec('2.51').truncate()).toString()).equals('2');
-    expectThat((dec('-2.51').truncate()).toString()).equals('-2');
-    expectThat((dec('-2').truncate()).toString()).equals('-2');
+  group('truncate()', () {
+    test('without scale', () {
+      expectThat(dec('1.4999').truncate()).equals(dec('1'));
+      expectThat(dec('2.5').truncate()).equals(dec('2'));
+      expectThat(dec('-2.51').truncate()).equals(dec('-2'));
+      expectThat(dec('-2').truncate()).equals(dec('-2'));
+    });
+    test('with positive scale', () {
+      expectThat(dec('1.4999').truncate(scale: 1)).equals(dec('1.4'));
+      expectThat(dec('2.5').truncate(scale: 1)).equals(dec('2.5'));
+      expectThat(dec('-2.51').truncate(scale: 1)).equals(dec('-2.5'));
+      expectThat(dec('-2').truncate(scale: 1)).equals(dec('-2'));
+    });
+    test('with negative scale', () {
+      expectThat(dec('1.4999').truncate(scale: -1)).equals(dec('0'));
+      expectThat(dec('12.5').truncate(scale: -1)).equals(dec('10'));
+      expectThat(dec('-25.1').truncate(scale: -1)).equals(dec('-20'));
+      expectThat(dec('-24').truncate(scale: -1)).equals(dec('-20'));
+    });
+  });
+  test('shift()', () {
+    expectThat(dec('123.4567').shift(0)).equals(dec('123.4567'));
+    expectThat(dec('123.4567').shift(1)).equals(dec('1234.567'));
+    expectThat(dec('123.4567').shift(2)).equals(dec('12345.67'));
+    expectThat(dec('123.4567').shift(6)).equals(dec('123456700'));
+    expectThat(dec('123.4567').shift(-1)).equals(dec('12.34567'));
+    expectThat(dec('123.4567').shift(-2)).equals(dec('1.234567'));
+    expectThat(dec('123.4567').shift(-3)).equals(dec('0.1234567'));
   });
   test('clamp(Decimal lowerLimit, Decimal upperLimit)', () {
-    expectThat((dec('2.51').clamp(dec('1'), dec('3'))).toString())
-        .equals('2.51');
-    expectThat((dec('2.51').clamp(dec('2.6'), dec('3'))).toString())
-        .equals('2.6');
-    expectThat((dec('2.51').clamp(dec('1'), dec('2.5'))).toString())
-        .equals('2.5');
-  });
-  test('toInt()', () {
-    expectThat(dec('2.51').toInt()).equals(2);
-    expectThat(dec('-2.51').toInt()).equals(-2);
-    expectThat(dec('-2').toInt()).equals(-2);
+    expectThat(dec('2.51').clamp(dec('1'), dec('3'))).equals(dec('2.51'));
+    expectThat(dec('2.51').clamp(dec('2.6'), dec('3'))).equals(dec('2.6'));
+    expectThat(dec('2.51').clamp(dec('1'), dec('2.5'))).equals(dec('2.5'));
   });
   test('toBigInt()', () {
     expectThat(dec('2.51').toBigInt()).equals(BigInt.from(2));
@@ -219,28 +264,16 @@ void main() {
     expectThat(dec('-2.51').toDouble()).equals(-2.51);
     expectThat(dec('-2').toDouble()).equals(-2.0);
   });
-  test('hasFinitePrecision', () {
-    for (final d in [
-      dec('100'),
-      dec('100.100'),
-      dec('1') / dec('5'),
-      (dec('1') / dec('3')) * dec('3'),
-      dec('0.00000000000000000000001')
-    ]) {
-      expectThat(d.hasFinitePrecision).isTrue;
-    }
-    for (final d in [dec('1') / dec('3')]) {
-      expectThat(d.hasFinitePrecision).isFalse;
-    }
-  });
   test('precision', () {
     expectThat(dec('100').precision).equals(3);
     expectThat(dec('10000').precision).equals(5);
+    expectThat(dec('-10000').precision).equals(5);
+    expectThat(dec('1e5').precision).equals(6);
     expectThat(dec('100.000').precision).equals(3);
     expectThat(dec('100.1').precision).equals(4);
     expectThat(dec('100.0000001').precision).equals(10);
+    expectThat(dec('-100.0000001').precision).equals(10);
     expectThat(dec('100.000000000000000000000000000001').precision).equals(33);
-    expectThat(() => (dec('1') / dec('3')).precision).throws;
   });
   test('scale', () {
     expectThat(dec('100').scale).equals(0);
@@ -248,8 +281,8 @@ void main() {
     expectThat(dec('100.000').scale).equals(0);
     expectThat(dec('100.1').scale).equals(1);
     expectThat(dec('100.0000001').scale).equals(7);
+    expectThat(dec('-100.0000001').scale).equals(7);
     expectThat(dec('100.000000000000000000000000000001').scale).equals(30);
-    expectThat(() => (dec('1') / dec('3')).scale).throws;
   });
   test('toStringAsFixed(int fractionDigits)', () {
     for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
@@ -340,5 +373,32 @@ void main() {
       '"one":"${Decimal.one}"'
       '}',
     );
+  });
+
+  test('Rational.hasFinitePrecision', () {
+    const p = Rational.parse;
+    for (final r in [
+      p('100'),
+      p('100.100'),
+      p('1') / p('5'),
+      (p('1') / p('3')) * p('3'),
+      p('0.00000000000000000000001'),
+    ]) {
+      expectThat(r.hasFinitePrecision).isTrue;
+    }
+    for (final r in [p('1') / p('3')]) {
+      expectThat(r.hasFinitePrecision).isFalse;
+    }
+  });
+
+  test('Rational.toDecimal', () {
+    Rational r(int numerator, int denominator) =>
+        Rational.fromInt(numerator, denominator);
+    expectThat(r(1, 1).toDecimal()).equals(dec('1'));
+    expectThat(() => r(1, 3).toDecimal()).throwsA<AssertionError>();
+    expectThat(r(1, 3).toDecimal(scaleOnInfinitePrecision: 1))
+        .equals(dec('0.3'));
+    expectThat(r(1, 4).toDecimal(scaleOnInfinitePrecision: 1))
+        .equals(dec('0.25'));
   });
 }

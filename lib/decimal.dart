@@ -14,36 +14,58 @@
 
 import 'package:rational/rational.dart';
 
+final _i0 = BigInt.zero;
+final _i1 = BigInt.one;
+final _i2 = BigInt.two;
+final _i5 = BigInt.from(5);
+final _i10 = BigInt.from(10);
+
+/// A number that can be exactly written with a finite number of digits in the
+/// decimal system.
 class Decimal implements Comparable<Decimal> {
-  factory Decimal.parse(String value) =>
-      Decimal._fromRational(Rational.parse(value));
+  /// Create a new decimal from its rational value.
+  Decimal._(this._rational) : assert(_rational.hasFinitePrecision);
 
-  factory Decimal.fromBigInt(BigInt value) =>
-      Decimal._fromRational(Rational(value));
+  /// Create a new [Decimal] from a [BigInt].
+  factory Decimal.fromBigInt(BigInt value) => Decimal._(value.toRational());
 
+  /// Create a new [Decimal] from an [int].
   factory Decimal.fromInt(int value) => Decimal.fromBigInt(BigInt.from(value));
 
-  factory Decimal.fromJson(String value) = Decimal.parse;
+  /// Create a new [Decimal] from its [String] representation.
+  factory Decimal.fromJson(String value) => Decimal.parse(value);
 
-  Decimal._fromRational(this._rational);
+  final Rational _rational;
 
-  static Decimal zero = Decimal.fromInt(0);
-  static Decimal one = Decimal.fromInt(1);
-  static Decimal ten = Decimal.fromInt(10);
+  /// Parses [source] as a decimal literal and returns its value as [Decimal].
+  static Decimal parse(String source) => Decimal._(Rational.parse(source));
 
-  static Decimal? tryParse(String value) {
+  /// Parses [source] as a decimal literal and returns its value as [Decimal].
+  static Decimal? tryParse(String source) {
     try {
-      return Decimal.parse(value);
+      return Decimal.parse(source);
     } on FormatException {
       return null;
     }
   }
 
-  final Rational _rational;
+  /// The [Decimal] corresponding to `0`.
+  static Decimal zero = Decimal.fromInt(0);
 
+  /// The [Decimal] corresponding to `1`.
+  static Decimal one = Decimal.fromInt(1);
+
+  /// The [Decimal] corresponding to `10`.
+  static Decimal ten = Decimal.fromInt(10);
+
+  /// The [Rational] corresponding to `this`.
+  Rational toRational() => _rational;
+
+  /// Returns `true` if `this` is an integer.
   bool get isInteger => _rational.isInteger;
 
-  Decimal get inverse => Decimal._fromRational(_rational.inverse);
+  /// Returns a [Rational] corresponding to `1/this`.
+  Rational get inverse => _rational.inverse;
 
   @override
   bool operator ==(Object other) =>
@@ -52,176 +74,277 @@ class Decimal implements Comparable<Decimal> {
   @override
   int get hashCode => _rational.hashCode;
 
-  /// Return a [String] representation of this decimal.
-  ///
-  /// **WARNING**: when [hasFinitePrecision] is `false` the decimal
-  /// representation is truncated to the 10th decimal unit.
+  /// Returns a [String] representation of `this`.
   @override
-  String toString() => _rational.toDecimalString();
+  String toString() {
+    if (_rational.isInteger) return _rational.toString();
+    var value = toStringAsFixed(scale);
+    while (
+        value.contains('.') && (value.endsWith('0') || value.endsWith('.'))) {
+      value = value.substring(0, value.length - 1);
+    }
+    return value;
+  }
 
-  /// Convert `this` to String by using [toString].
-  ///
-  /// **WARNING**: when [hasFinitePrecision] is `false` the decimal
-  /// representation is truncated to the 10th decimal unit.
+  /// Converts `this` to [String] by using [toString].
   String toJson() => toString();
-
-  // implementation of Comparable
 
   @override
   int compareTo(Decimal other) => _rational.compareTo(other._rational);
 
-  // implementation of num
+  /// Addition operator.
+  Decimal operator +(Decimal other) => Decimal._(_rational + other._rational);
 
-  Decimal operator +(Decimal other) =>
-      Decimal._fromRational(_rational + other._rational);
+  /// Subtraction operator.
+  Decimal operator -(Decimal other) => Decimal._(_rational - other._rational);
 
-  Decimal operator -(Decimal other) =>
-      Decimal._fromRational(_rational - other._rational);
+  /// Multiplication operator.
+  Decimal operator *(Decimal other) => Decimal._(_rational * other._rational);
 
-  Decimal operator *(Decimal other) =>
-      Decimal._fromRational(_rational * other._rational);
+  /// Euclidean modulo operator.
+  ///
+  /// See [num.operator%].
+  Decimal operator %(Decimal other) => Decimal._(_rational % other._rational);
 
-  Decimal operator %(Decimal other) =>
-      Decimal._fromRational(_rational % other._rational);
-
-  Decimal operator /(Decimal other) =>
-      Decimal._fromRational(_rational / other._rational);
+  /// Division operator.
+  Rational operator /(Decimal other) => _rational / other._rational;
 
   /// Truncating division operator.
   ///
-  /// The result of the truncating division [:a ~/ b:] is equivalent to
-  /// [:(a / b).truncate():].
-  Decimal operator ~/(Decimal other) =>
-      Decimal._fromRational(_rational ~/ other._rational);
+  /// See [num.operator~/].
+  BigInt operator ~/(Decimal other) => _rational ~/ other._rational;
 
-  Decimal operator -() => Decimal._fromRational(-_rational);
+  /// Returns the negative value of this rational.
+  Decimal operator -() => Decimal._(-_rational);
 
-  /// Return the remainder from dividing this [num] by [other].
+  /// Return the remainder from dividing this [Decimal] by [other].
   Decimal remainder(Decimal other) =>
-      Decimal._fromRational(_rational.remainder(other._rational));
+      Decimal._(_rational.remainder(other._rational));
 
-  /// Relational less than operator.
+  /// Whether this number is numerically smaller than [other].
   bool operator <(Decimal other) => _rational < other._rational;
 
-  /// Relational less than or equal operator.
+  /// Whether this number is numerically smaller than or equal to [other].
   bool operator <=(Decimal other) => _rational <= other._rational;
 
-  /// Relational greater than operator.
+  /// Whether this number is numerically greater than [other].
   bool operator >(Decimal other) => _rational > other._rational;
 
-  /// Relational greater than or equal operator.
+  /// Whether this number is numerically greater than or equal to [other].
   bool operator >=(Decimal other) => _rational >= other._rational;
 
-  bool get isNaN => _rational.isNaN;
+  /// Returns the absolute value of `this`.
+  Decimal abs() => Decimal._(_rational.abs());
 
-  bool get isNegative => _rational.isNegative;
-
-  bool get isInfinite => _rational.isInfinite;
-
-  /// Returns the absolute value of this [num].
-  Decimal abs() => Decimal._fromRational(_rational.abs());
-
-  /// The signum function value of this [num].
+  /// The signum function value of `this`.
   ///
-  /// E.e. -1, 0 or 1 as the value of this [num] is negative, zero or positive.
+  /// E.e. -1, 0 or 1 as the value of this [Decimal] is negative, zero or positive.
   int get signum => _rational.signum;
 
-  /// Returns the greatest integer value no greater than this [num].
-  Decimal floor() => Decimal._fromRational(_rational.floor());
+  /// Returns the greatest [Decimal] value no greater than this [Rational].
+  ///
+  /// An optional [scale] value can be provided as parameter to indicate the
+  /// digit used as reference for the operation.
+  ///
+  /// ```
+  /// var x = Decimal.parse('123.4567');
+  /// x.floor(); // 123
+  /// x.floor(scale: 1); // 123.4
+  /// x.floor(scale: 2); // 123.45
+  /// x.floor(scale: -1); // 120
+  /// ```
+  Decimal floor({int scale = 0}) => _scaleAndApply(scale, (e) => e.floor());
 
-  /// Returns the least integer value that is no smaller than this [num].
-  Decimal ceil() => Decimal._fromRational(_rational.ceil());
+  /// Returns the least [Decimal] value that is no smaller than this [Rational].
+  ///
+  /// An optional [scale] value can be provided as parameter to indicate the
+  /// digit used as reference for the operation.
+  ///
+  /// ```
+  /// var x = Decimal.parse('123.4567');
+  /// x.ceil(); // 124
+  /// x.ceil(scale: 1); // 123.5
+  /// x.ceil(scale: 2); // 123.46
+  /// x.ceil(scale: -1); // 130
+  /// ```
+  Decimal ceil({int scale = 0}) => _scaleAndApply(scale, (e) => e.ceil());
 
-  /// Returns the integer value closest to this [num].
+  /// Returns the [Decimal] value closest to this number.
   ///
   /// Rounds away from zero when there is no closest integer:
-  /// [:(3.5).round() == 4:] and [:(-3.5).round() == -4:].
-  Decimal round() => Decimal._fromRational(_rational.round());
-
-  /// Returns the integer value obtained by discarding any fractional digits
-  /// from this [num].
-  Decimal truncate() => Decimal._fromRational(_rational.truncate());
-
-  /// Returns the integer value closest to `this`.
+  /// `(3.5).round() == 4` and `(-3.5).round() == -4`.
   ///
-  /// Rounds away from zero when there is no closest integer:
-  /// [:(3.5).round() == 4:] and [:(-3.5).round() == -4:].
+  /// An optional [scale] value can be provided as parameter to indicate the
+  /// digit used as reference for the operation.
   ///
-  /// The result is a double.
-  double roundToDouble() => _rational.roundToDouble();
+  /// ```
+  /// var x = Decimal.parse('123.4567');
+  /// x.round(); // 123
+  /// x.round(scale: 1); // 123.5
+  /// x.round(scale: 2); // 123.46
+  /// x.round(scale: -1); // 120
+  /// ```
+  Decimal round({int scale = 0}) => _scaleAndApply(scale, (e) => e.round());
 
-  /// Returns the greatest integer value no greater than `this`.
+  Decimal _scaleAndApply(int scale, BigInt Function(Rational) f) {
+    final scaleFactor = Decimal.ten.pow(scale).toRational();
+    return (f(_rational * scaleFactor).toRational() / scaleFactor).toDecimal();
+  }
+
+  /// The [BigInt] obtained by discarding any fractional digits from `this`.
+  Decimal truncate({int scale = 0}) =>
+      _scaleAndApply(scale, (e) => e.truncate());
+
+  /// Shift the decimal point on the right for positive [value] or on the left
+  /// for negative one.
   ///
-  /// The result is a double.
-  double floorToDouble() => _rational.floorToDouble();
+  /// ```dart
+  /// var x = Decimal.parse('123.4567');
+  /// x.shift(1); // 1234.567
+  /// x.shift(-1); // 12.34567
+  /// ```
+  Decimal shift(int value) => this * ten.pow(value);
 
-  /// Returns the least integer value no smaller than `this`.
-  ///
-  /// The result is a double.
-  double ceilToDouble() => _rational.ceilToDouble();
-
-  /// Returns the integer obtained by discarding any fractional digits from
-  /// `this`.
-  ///
-  /// The result is a double.
-  double truncateToDouble() => _rational.truncateToDouble();
-
-  /// Clamps `this` to be in the range [lowerLimit]-[upperLimit]. The comparison
-  /// is done using [compareTo] and therefore takes [:-0.0:] into account.
+  /// Clamps `this` to be in the range [lowerLimit]-[upperLimit].
   Decimal clamp(Decimal lowerLimit, Decimal upperLimit) =>
-      Decimal._fromRational(
-          _rational.clamp(lowerLimit._rational, upperLimit._rational));
+      Decimal._(_rational.clamp(lowerLimit._rational, upperLimit._rational));
 
-  /// Truncates this [num] to an integer and returns the result as an [int].
-  int toInt() => _rational.toInt();
-
-  /// Truncates this [num] to a big integer and returns the result as an
-  /// [BigInt].
+  /// The [BigInt] obtained by discarding any fractional digits from `this`.
   BigInt toBigInt() => _rational.toBigInt();
 
-  /// Return this [num] as a [double].
+  /// Returns `this` as a [double].
   ///
   /// If the number is not representable as a [double], an approximation is
   /// returned. For numerically large integers, the approximation may be
   /// infinite.
   double toDouble() => _rational.toDouble();
 
-  /// Inspect if this [num] has a finite precision.
-  bool get hasFinitePrecision => _rational.hasFinitePrecision;
-
-  /// The precision of this [num].
+  /// The precision of this [Decimal].
   ///
-  /// The sum of the number of digits before and after the decimal point.
+  /// The precision is the sum of the number of digits before and after the
+  /// decimal point.
   ///
-  /// Throws [StateError] if the precision is infinite, i.e. when
-  /// [hasFinitePrecision] is `false`.
-  int get precision => _rational.precision;
+  /// ```dart
+  /// Decimal.parse('1.5').precision; // => 2
+  /// ```
+  int get precision {
+    var x = _rational.numerator;
+    while (x % _rational.denominator != _i0) {
+      x *= _i10;
+    }
+    x = x ~/ _rational.denominator;
+    return x.abs().toString().length;
+  }
 
-  /// The scale of this [num].
+  /// The scale of this [Decimal].
   ///
-  /// The number of digits after the decimal point.
+  /// The scale is the number of digits after the decimal point.
   ///
-  /// Throws [StateError] if the scale is infinite, i.e. when
-  /// [hasFinitePrecision] is `false`.
-  int get scale => _rational.scale;
+  /// ```dart
+  /// Decimal.parse('1.5').scale; // => 1
+  /// Decimal.parse('1').scale; // => 0
+  /// ```
+  int get scale {
+    var i = 0;
+    var x = _rational.numerator;
+    while (x % _rational.denominator != _i0) {
+      i++;
+      x *= _i10;
+    }
+    return i;
+  }
 
-  /// Converts a [num] to a string representation with [fractionDigits] digits
-  /// after the decimal point.
-  String toStringAsFixed(int fractionDigits) =>
-      _rational.toStringAsFixed(fractionDigits);
+  /// A decimal-point string-representation of this number with [fractionDigits]
+  /// digits after the decimal point.
+  String toStringAsFixed(int fractionDigits) {
+    assert(fractionDigits >= 0);
+    if (fractionDigits == 0) return round().toBigInt().toString();
+    final value = round(scale: fractionDigits);
+    final intPart = value.toBigInt();
+    final decimalPart =
+        (one + value.abs() - intPart.abs().toDecimal()).shift(fractionDigits);
+    return '$intPart.${decimalPart.toString().substring(1)}';
+  }
 
-  /// Converts a [num] to a string in decimal exponential notation with
-  /// [fractionDigits] digits after the decimal point.
+  /// An exponential string-representation of this number with [fractionDigits]
+  /// digits after the decimal point.
   String toStringAsExponential([int? fractionDigits]) =>
-      _rational.toStringAsExponential(fractionDigits);
+      toDouble().toStringAsExponential(fractionDigits);
 
-  /// Converts a [num] to a string representation with [precision] significant
-  /// digits.
-  String toStringAsPrecision(int precision) =>
-      _rational.toStringAsPrecision(precision);
+  /// A string representation with [precision] significant digits.
+  String toStringAsPrecision(int precision) {
+    assert(precision > 0);
+
+    if (this == Decimal.zero) {
+      return precision == 1 ? '0' : '0.'.padRight(1 + precision, '0');
+    }
+
+    final limit = Decimal.ten.pow(precision);
+
+    var shift = Decimal.one;
+    final absValue = abs();
+    var pad = 0;
+    while (absValue * shift < limit) {
+      pad++;
+      shift *= Decimal.ten;
+    }
+    while (absValue * shift >= limit) {
+      pad--;
+      shift = (shift / Decimal.ten).toDecimal();
+    }
+    final value = ((this * shift).round() / shift).toDecimal();
+    return pad <= 0 ? value.toString() : value.toStringAsFixed(pad);
+  }
 
   /// Returns `this` to the power of [exponent].
   ///
   /// Returns [one] if the [exponent] equals `0`.
-  Decimal pow(int exponent) => Decimal._fromRational(_rational.pow(exponent));
+  Decimal pow(int exponent) => Decimal._(_rational.pow(exponent));
+}
+
+/// Extensions on [Rational].
+extension RationalExt on Rational {
+  /// Returns a [Decimal] corresponding to `this`.
+  ///
+  /// Some rational like `1/3` can not be converted to decimal because they need
+  /// an infinite number of digits. For those cases (where [hasFinitePrecision]
+  /// is `false`) a [scaleOnInfinitePrecision] can be provided to truncate its
+  /// decimal representation. Note that the returned decimal will not be exactly
+  /// equal to `this`.
+  Decimal toDecimal({int? scaleOnInfinitePrecision}) {
+    if (scaleOnInfinitePrecision == null || hasFinitePrecision) {
+      return Decimal._(this);
+    }
+    final scaleFactor = Rational.fromInt(10).pow(scaleOnInfinitePrecision);
+    return Decimal._(
+        (this * scaleFactor).truncate().toRational() / scaleFactor);
+  }
+
+  /// Returns `true` if this [Rational] has a finite precision.
+  ///
+  /// Having a finite precision means that the number can be exactly represented
+  /// as decimal with a finite number of fractional digits.
+  bool get hasFinitePrecision {
+    // the denominator should only be a product of powers of 2 and 5
+    var den = denominator;
+    while (den % _i5 == _i0) {
+      den = den ~/ _i5;
+    }
+    while (den % _i2 == _i0) {
+      den = den ~/ _i2;
+    }
+    return den == _i1;
+  }
+}
+
+/// Extensions on [BigInt].
+extension BigIntExt on BigInt {
+  /// This [BigInt] as a [Decimal].
+  Decimal toDecimal() => Decimal.fromBigInt(this);
+}
+
+/// Extensions on [int].
+extension IntExt on int {
+  /// This [int] as a [Decimal].
+  Decimal toDecimal() => Decimal.fromInt(this);
 }

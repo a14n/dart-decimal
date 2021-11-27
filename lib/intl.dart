@@ -12,57 +12,63 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import 'package:decimal/decimal.dart';
+import 'package:rational/rational.dart';
 
 class DecimalIntl {
-  DecimalIntl(this.decimal);
+  DecimalIntl(Decimal decimal) : this._rational(decimal.toRational());
+  DecimalIntl._rational(this._rational);
 
   factory DecimalIntl._(dynamic number) {
     if (number is DecimalIntl) {
       return number;
     } else if (number is Decimal) {
       return DecimalIntl(number);
+    } else if (number is Rational) {
+      return DecimalIntl._rational(number);
+    } else if (number is BigInt) {
+      return DecimalIntl(Decimal.fromBigInt(number));
     } else if (number is int) {
       return DecimalIntl(Decimal.fromInt(number));
     }
     return DecimalIntl(Decimal.parse(number.toString()));
   }
 
-  final Decimal decimal;
+  final Rational _rational;
 
-  bool get isNegative => decimal.isNegative;
+  bool get isNegative => _rational < Rational.zero;
 
-  DecimalIntl abs() => DecimalIntl(decimal.abs());
+  DecimalIntl abs() => DecimalIntl._rational(_rational.abs());
 
   DecimalIntl operator ~/(dynamic other) =>
-      DecimalIntl(decimal ~/ DecimalIntl._(other).decimal);
+      DecimalIntl._(_rational ~/ DecimalIntl._(other)._rational);
 
   DecimalIntl operator +(dynamic other) =>
-      DecimalIntl(decimal + DecimalIntl._(other).decimal);
+      DecimalIntl._(_rational + DecimalIntl._(other)._rational);
 
   DecimalIntl operator -(dynamic other) =>
-      DecimalIntl(decimal - DecimalIntl._(other).decimal);
+      DecimalIntl._(_rational - DecimalIntl._(other)._rational);
 
   DecimalIntl operator *(dynamic other) =>
-      DecimalIntl(decimal * DecimalIntl._(other).decimal);
+      DecimalIntl._(_rational * DecimalIntl._(other)._rational);
 
   DecimalIntl operator /(dynamic other) =>
-      DecimalIntl(decimal / DecimalIntl._(other).decimal);
+      DecimalIntl._(_rational / DecimalIntl._(other)._rational);
 
   DecimalIntl remainder(dynamic other) =>
-      DecimalIntl(decimal.remainder(DecimalIntl._(other).decimal));
+      DecimalIntl._(_rational.remainder(DecimalIntl._(other)._rational));
 
-  int toInt() => decimal.toInt();
+  int toInt() => _rational.toBigInt().toInt();
 
-  double toDouble() => decimal.toDouble();
+  double toDouble() => _rational.toDouble();
 
-  DecimalIntl round() => DecimalIntl(decimal.round());
-
-  @override
-  bool operator ==(Object other) => decimal == DecimalIntl._(other).decimal;
+  DecimalIntl round() => DecimalIntl._(_rational.round());
 
   @override
-  int get hashCode => decimal.hashCode;
+  bool operator ==(Object other) => _rational == DecimalIntl._(other)._rational;
 
   @override
-  String toString() => decimal.toString();
+  int get hashCode => _rational.hashCode;
+
+  @override
+  String toString() => _rational.toString();
 }

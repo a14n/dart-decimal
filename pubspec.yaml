@@ -14,3 +14,7 @@ dev_dependencies:
   expector: ^0.1.2
   intl: ^0.17.0
   test: ^1.17.2
+
+dependency_overrides:
+  rational:
+    path: ../dart-rational
