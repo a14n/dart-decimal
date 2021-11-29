@@ -1,3 +1,24 @@
+# 2.0.0 (2021-11-29)
+
+The goal of this version is to have sharper types on the API and to avoid having [Decimal] objects that are not decimal numbers (`1/3` for instance).
+
+It introduces several breaking changes.
+
+- `~/` now returns a `BigInt`. If you need a `Decimal` you can convert the `BigInt` to `Decimal` with `bigint.toDecimal()`.
+- Removal of `isNaN` getter. It was always returning `false`.
+- Removal of `isInfinite` getter. It was always returning `false`.
+- Removal of `isNegative` getter. You can replace it with `decimal < Decimal.zero`.
+- `inverse`, `/` now return a `Rational`. If you need a `Decimal` you can convert the `Rational` to `Decimal` with `rational.toDecimal(scaleOnInfinitePrecision: xxx)`. If you need to make several computations where inverses or divisions are involved you should make thoses operations on `Rational` type to avoid loosing precision and at the end convert the result back to `Decimal` if you want to display the result in a decimal form.
+
+Other changes:
+
+- `round()`, `floor()`, `ceil()`, `truncate()` now accept an optional `scale` to indicate at which digit the operation should be done.
+- Add `shift` to move the decimal point.
+- Add extension method `hasFinitePrecision` on `Rational` to know if a decimal form of the rational is possible without loosing precision.
+- Add extension method `toDecimal()` on `Rational`.
+- Add extension method `toDecimal()` on `int`.
+- Add extension method `toDecimal()` on `BigInt`.
+
 # 1.5.0 (2021-11-17)
 
 - Support json serialization as String with `Decimal.fromJson`/`Decimal.toJson`.
