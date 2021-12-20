@@ -260,10 +260,10 @@ class Decimal implements Comparable<Decimal> {
     assert(fractionDigits >= 0);
     if (fractionDigits == 0) return round().toBigInt().toString();
     final value = round(scale: fractionDigits);
-    final intPart = value.toBigInt();
+    final intPart = value.toBigInt().abs();
     final decimalPart =
-        (one + value.abs() - intPart.abs().toDecimal()).shift(fractionDigits);
-    return '$intPart.${decimalPart.toString().substring(1)}';
+        (one + value.abs() - intPart.toDecimal()).shift(fractionDigits);
+    return '${value < zero ? '-' : ''}$intPart.${decimalPart.toString().substring(1)}';
   }
 
   /// An exponential string-representation of this number with [fractionDigits]
