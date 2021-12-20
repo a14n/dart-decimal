@@ -1,3 +1,7 @@
+# 2.0.1 (2021-12-20)
+
+- Fix [`toString` issue with negative number between 0 and -1](https://github.com/a14n/dart-decimal/issues/65)
+
 # 2.0.0 (2021-11-29)
 
 The goal of this version is to have sharper types on the API and to avoid having [Decimal] objects that are not decimal numbers (`1/3` for instance).
