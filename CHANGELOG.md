@@ -1,3 +1,8 @@
+# 2.1.0 (2021-12-22)
+
+- Fix [toStringAsExponential returns INFINITY](https://github.com/a14n/dart-decimal/issues/48) by implementing `toStringAsExponential` without relying on double implementation.
+- Fix issue to have `zero.precision == 1`.
+
 # 2.0.1 (2021-12-20)
 
 - Fix [`toString` issue with negative number between 0 and -1](https://github.com/a14n/dart-decimal/issues/65)
