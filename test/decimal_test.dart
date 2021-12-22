@@ -294,12 +294,16 @@ void main() {
     }
   });
   test('toStringAsExponential(int fractionDigits)', () {
-    for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235]) {
+    expectThat(dec('0').toStringAsExponential(0)).equals('0e+0');
+    for (final n in [0, 1, 23, 2.2, 2.499999, 2.5, 2.7, 1.235, -1.2, -0.02]) {
       for (final p in [1, 5, 10]) {
         expectThat(dec(n.toString()).toStringAsExponential(p))
             .equals(n.toStringAsExponential(p));
       }
     }
+    // issue https://github.com/a14n/dart-decimal/issues/48
+    expectThat(dec('1.7976931348623157e+310').toStringAsExponential(10))
+        .equals('1.7976931349e+310');
   });
   test('toStringAsPrecision(int precision)', () {
     expectThat(dec('0').toStringAsPrecision(1)).equals('0');

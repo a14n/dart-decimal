@@ -268,8 +268,28 @@ class Decimal implements Comparable<Decimal> {
 
   /// An exponential string-representation of this number with [fractionDigits]
   /// digits after the decimal point.
-  String toStringAsExponential([int? fractionDigits]) =>
-      toDouble().toStringAsExponential(fractionDigits);
+  String toStringAsExponential([int fractionDigits = 0]) {
+    assert(fractionDigits >= 0);
+
+    final negative = this < zero;
+    var value = abs();
+    var eValue = 0;
+    while (value < one && value > zero) {
+      value *= ten;
+      eValue--;
+    }
+    while (value >= ten) {
+      value = (value / ten).toDecimal();
+      eValue++;
+    }
+    return <String>[
+      if (negative) '-',
+      value.round(scale: fractionDigits).toStringAsFixed(fractionDigits),
+      'e',
+      if (eValue >= 0) '+',
+      '$eValue',
+    ].join();
+  }
 
   /// A string representation with [precision] significant digits.
   String toStringAsPrecision(int precision) {
