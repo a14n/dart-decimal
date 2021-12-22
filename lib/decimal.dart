@@ -27,7 +27,7 @@ class Decimal implements Comparable<Decimal> {
   Decimal._(this._rational) : assert(_rational.hasFinitePrecision);
 
   /// Create a new [Decimal] from a [BigInt].
-  factory Decimal.fromBigInt(BigInt value) => Decimal._(value.toRational());
+  factory Decimal.fromBigInt(BigInt value) => value.toRational().toDecimal();
 
   /// Create a new [Decimal] from an [int].
   factory Decimal.fromInt(int value) => Decimal.fromBigInt(BigInt.from(value));
@@ -38,7 +38,7 @@ class Decimal implements Comparable<Decimal> {
   final Rational _rational;
 
   /// Parses [source] as a decimal literal and returns its value as [Decimal].
-  static Decimal parse(String source) => Decimal._(Rational.parse(source));
+  static Decimal parse(String source) => Rational.parse(source).toDecimal();
 
   /// Parses [source] as a decimal literal and returns its value as [Decimal].
   static Decimal? tryParse(String source) {
@@ -93,18 +93,22 @@ class Decimal implements Comparable<Decimal> {
   int compareTo(Decimal other) => _rational.compareTo(other._rational);
 
   /// Addition operator.
-  Decimal operator +(Decimal other) => Decimal._(_rational + other._rational);
+  Decimal operator +(Decimal other) =>
+      (_rational + other._rational).toDecimal();
 
   /// Subtraction operator.
-  Decimal operator -(Decimal other) => Decimal._(_rational - other._rational);
+  Decimal operator -(Decimal other) =>
+      (_rational - other._rational).toDecimal();
 
   /// Multiplication operator.
-  Decimal operator *(Decimal other) => Decimal._(_rational * other._rational);
+  Decimal operator *(Decimal other) =>
+      (_rational * other._rational).toDecimal();
 
   /// Euclidean modulo operator.
   ///
   /// See [num.operator%].
-  Decimal operator %(Decimal other) => Decimal._(_rational % other._rational);
+  Decimal operator %(Decimal other) =>
+      (_rational % other._rational).toDecimal();
 
   /// Division operator.
   Rational operator /(Decimal other) => _rational / other._rational;
@@ -115,11 +119,11 @@ class Decimal implements Comparable<Decimal> {
   BigInt operator ~/(Decimal other) => _rational ~/ other._rational;
 
   /// Returns the negative value of this rational.
-  Decimal operator -() => Decimal._(-_rational);
+  Decimal operator -() => (-_rational).toDecimal();
 
   /// Return the remainder from dividing this [Decimal] by [other].
   Decimal remainder(Decimal other) =>
-      Decimal._(_rational.remainder(other._rational));
+      (_rational.remainder(other._rational)).toDecimal();
 
   /// Whether this number is numerically smaller than [other].
   bool operator <(Decimal other) => _rational < other._rational;
@@ -134,7 +138,7 @@ class Decimal implements Comparable<Decimal> {
   bool operator >=(Decimal other) => _rational >= other._rational;
 
   /// Returns the absolute value of `this`.
-  Decimal abs() => Decimal._(_rational.abs());
+  Decimal abs() => _rational.abs().toDecimal();
 
   /// The signum function value of `this`.
   ///
@@ -187,7 +191,7 @@ class Decimal implements Comparable<Decimal> {
   Decimal round({int scale = 0}) => _scaleAndApply(scale, (e) => e.round());
 
   Decimal _scaleAndApply(int scale, BigInt Function(Rational) f) {
-    final scaleFactor = Decimal.ten.pow(scale).toRational();
+    final scaleFactor = ten.pow(scale).toRational();
     return (f(_rational * scaleFactor).toRational() / scaleFactor).toDecimal();
   }
 
@@ -207,7 +211,7 @@ class Decimal implements Comparable<Decimal> {
 
   /// Clamps `this` to be in the range [lowerLimit]-[upperLimit].
   Decimal clamp(Decimal lowerLimit, Decimal upperLimit) =>
-      Decimal._(_rational.clamp(lowerLimit._rational, upperLimit._rational));
+      _rational.clamp(lowerLimit._rational, upperLimit._rational).toDecimal();
 
   /// The [BigInt] obtained by discarding any fractional digits from `this`.
   BigInt toBigInt() => _rational.toBigInt();
@@ -293,22 +297,26 @@ class Decimal implements Comparable<Decimal> {
   String toStringAsPrecision(int precision) {
     assert(precision > 0);
 
-    if (this == Decimal.zero) {
-      return precision == 1 ? '0' : '0.'.padRight(1 + precision, '0');
+    if (this == zero) {
+      return <String>[
+        '0',
+        if (precision > 1) '.',
+        for (var i = 1; i < precision; i++) '0',
+      ].join();
     }
 
-    final limit = Decimal.ten.pow(precision);
+    final limit = ten.pow(precision);
 
-    var shift = Decimal.one;
+    var shift = one;
     final absValue = abs();
     var pad = 0;
     while (absValue * shift < limit) {
       pad++;
-      shift *= Decimal.ten;
+      shift *= ten;
     }
     while (absValue * shift >= limit) {
       pad--;
-      shift = (shift / Decimal.ten).toDecimal();
+      shift = (shift / ten).toDecimal();
     }
     final value = ((this * shift).round() / shift).toDecimal();
     return pad <= 0 ? value.toString() : value.toStringAsFixed(pad);
@@ -317,7 +325,7 @@ class Decimal implements Comparable<Decimal> {
   /// Returns `this` to the power of [exponent].
   ///
   /// Returns [one] if the [exponent] equals `0`.
-  Decimal pow(int exponent) => Decimal._(_rational.pow(exponent));
+  Decimal pow(int exponent) => _rational.pow(exponent).toDecimal();
 }
 
 /// Extensions on [Rational].
@@ -333,7 +341,7 @@ extension RationalExt on Rational {
     if (scaleOnInfinitePrecision == null || hasFinitePrecision) {
       return Decimal._(this);
     }
-    final scaleFactor = Rational.fromInt(10).pow(scaleOnInfinitePrecision);
+    final scaleFactor = _r10.pow(scaleOnInfinitePrecision);
     return Decimal._(
         (this * scaleFactor).truncate().toRational() / scaleFactor);
   }
