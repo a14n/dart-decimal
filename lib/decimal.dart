@@ -18,7 +18,7 @@ final _i0 = BigInt.zero;
 final _i1 = BigInt.one;
 final _i2 = BigInt.two;
 final _i5 = BigInt.from(5);
-final _i10 = BigInt.from(10);
+final _r10 = Rational.fromInt(10);
 
 /// A number that can be exactly written with a finite number of digits in the
 /// decimal system.
@@ -244,10 +244,10 @@ class Decimal implements Comparable<Decimal> {
   /// ```
   int get scale {
     var i = 0;
-    var x = _rational.numerator;
-    while (x % _rational.denominator != _i0) {
+    var x = _rational;
+    while (!x.isInteger) {
       i++;
-      x *= _i10;
+      x *= _r10;
     }
     return i;
   }
