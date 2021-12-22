@@ -275,6 +275,10 @@ void main() {
     expectThat(dec('100.0000001').precision).equals(10);
     expectThat(dec('-100.0000001').precision).equals(10);
     expectThat(dec('100.000000000000000000000000000001').precision).equals(33);
+    expectThat(dec('0').precision).equals(1);
+    expectThat(dec('0.1').precision).equals(2);
+    expectThat(dec('0.01').precision).equals(3);
+    expectThat(dec('-0.01').precision).equals(3);
   });
   test('scale', () {
     expectThat(dec('100').scale).equals(0);

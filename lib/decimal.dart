@@ -221,19 +221,17 @@ class Decimal implements Comparable<Decimal> {
 
   /// The precision of this [Decimal].
   ///
-  /// The precision is the sum of the number of digits before and after the
-  /// decimal point.
+  /// The precision is the number of digits in the unscaled value.
   ///
   /// ```dart
+  /// Decimal.parse('0').precision; // => 1
+  /// Decimal.parse('1').precision; // => 1
   /// Decimal.parse('1.5').precision; // => 2
+  /// Decimal.parse('0.5').precision; // => 2
   /// ```
   int get precision {
-    var x = _rational.numerator;
-    while (x % _rational.denominator != _i0) {
-      x *= _i10;
-    }
-    x = x ~/ _rational.denominator;
-    return x.abs().toString().length;
+    final value = abs();
+    return value.scale + value.toBigInt().toString().length;
   }
 
   /// The scale of this [Decimal].
