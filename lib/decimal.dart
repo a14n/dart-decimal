@@ -77,6 +77,7 @@ class Decimal implements Comparable<Decimal> {
   /// Returns a [String] representation of `this`.
   @override
   String toString() {
+    if (_rational.denominator == BigInt.zero) return 'Undefined';
     if (_rational.isInteger) return _rational.toString();
     var value = toStringAsFixed(scale);
     while (
