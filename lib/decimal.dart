@@ -111,7 +111,8 @@ class Decimal implements Comparable<Decimal> {
       (_rational % other._rational).toDecimal();
 
   /// Division operator.
-  Rational operator /(Decimal other) => _rational / other._rational;
+  Decimal operator /(Decimal other) =>
+      (_rational / other._rational).toDecimal();
 
   /// Truncating division operator.
   ///
