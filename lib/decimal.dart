@@ -284,6 +284,13 @@ class Decimal implements Comparable<Decimal> {
       value = (value / ten).toDecimal();
       eValue++;
     }
+
+    final roundedValue = value.round(scale: fractionDigits);
+    if (roundedValue >= ten) {
+      value = (value / ten).toDecimal();
+      eValue++;
+    }
+
     return <String>[
       if (negative) '-',
       value.round(scale: fractionDigits).toStringAsFixed(fractionDigits),
