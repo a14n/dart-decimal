@@ -285,15 +285,20 @@ class Decimal implements Comparable<Decimal> {
       eValue++;
     }
 
-    final roundedValue = value.round(scale: fractionDigits);
+    var roundedValue = value.round(scale: fractionDigits);
+
+    // If the rounded value is bigger than 10, then divide it once more
+    // to make it follow the normalized scientific notation.
     if (roundedValue >= ten) {
       value = (value / ten).toDecimal();
       eValue++;
+
+      roundedValue = value.round(scale: fractionDigits);
     }
 
     return <String>[
       if (negative) '-',
-      value.round(scale: fractionDigits).toStringAsFixed(fractionDigits),
+      roundedValue.toStringAsFixed(fractionDigits),
       'e',
       if (eValue >= 0) '+',
       '$eValue',
