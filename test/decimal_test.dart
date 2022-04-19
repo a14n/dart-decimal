@@ -308,6 +308,8 @@ void main() {
     // issue https://github.com/a14n/dart-decimal/issues/48
     expectThat(dec('1.7976931348623157e+310').toStringAsExponential(10))
         .equals('1.7976931349e+310');
+    // issue https://github.com/a14n/dart-decimal/issues/74
+    expectThat(dec('9.9999e+7').toStringAsExponential(2)).equals('1.00e+8');
   });
   test('toStringAsPrecision(int precision)', () {
     expectThat(dec('0').toStringAsPrecision(1)).equals('0');

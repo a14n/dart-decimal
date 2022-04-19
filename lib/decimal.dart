@@ -284,9 +284,17 @@ class Decimal implements Comparable<Decimal> {
       value = (value / ten).toDecimal();
       eValue++;
     }
+    value = value.round(scale: fractionDigits);
+    // If the rounded value is 10, then divide it once more to make it follow
+    // the normalized scientific notation. See https://github.com/a14n/dart-decimal/issues/74
+    if (value == ten) {
+      value = (value / ten).toDecimal();
+      eValue++;
+    }
+
     return <String>[
       if (negative) '-',
-      value.round(scale: fractionDigits).toStringAsFixed(fractionDigits),
+      value.toStringAsFixed(fractionDigits),
       'e',
       if (eValue >= 0) '+',
       '$eValue',
