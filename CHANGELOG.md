@@ -1,3 +1,7 @@
+# 2.2.0 (2022-04-19)
+
+- Fix [toStringAsExponential returned 10.00e+7 instead of 1.00e+8](https://github.com/a14n/dart-decimal/issues/74)
+
 # 2.1.0 (2021-12-22)
 
 - Fix [toStringAsExponential returns INFINITY](https://github.com/a14n/dart-decimal/issues/48) by implementing `toStringAsExponential` without relying on double implementation.
