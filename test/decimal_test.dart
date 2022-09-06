@@ -351,21 +351,21 @@ void main() {
     expectThat(Decimal.ten).equals(Decimal.fromInt(10));
   });
   test('pow', () {
-    expectThat(dec('100').pow(0)).equals(dec('1'));
-    expectThat(dec('100').pow(1)).equals(dec('100'));
-    expectThat(dec('100').pow(2)).equals(dec('10000'));
-    expectThat(dec('100').pow(-1)).equals(dec('0.01'));
-    expectThat(dec('100').pow(-2)).equals(dec('0.0001'));
-    expectThat(dec('0.1').pow(0)).equals(dec('1'));
-    expectThat(dec('0.1').pow(1)).equals(dec('0.1'));
-    expectThat(dec('0.1').pow(2)).equals(dec('0.01'));
-    expectThat(dec('0.1').pow(-1)).equals(dec('10'));
-    expectThat(dec('0.1').pow(-2)).equals(dec('100'));
-    expectThat(dec('-1').pow(0)).equals(dec('1'));
-    expectThat(dec('-1').pow(1)).equals(dec('-1'));
-    expectThat(dec('-1').pow(2)).equals(dec('1'));
-    expectThat(dec('-1').pow(-1)).equals(dec('-1'));
-    expectThat(dec('-1').pow(-2)).equals(dec('1'));
+    expectThat(dec('100').pow(0)).equals(dec('1').toRational());
+    expectThat(dec('100').pow(1)).equals(dec('100').toRational());
+    expectThat(dec('100').pow(2)).equals(dec('10000').toRational());
+    expectThat(dec('100').pow(-1)).equals(dec('0.01').toRational());
+    expectThat(dec('100').pow(-2)).equals(dec('0.0001').toRational());
+    expectThat(dec('0.1').pow(0)).equals(dec('1').toRational());
+    expectThat(dec('0.1').pow(1)).equals(dec('0.1').toRational());
+    expectThat(dec('0.1').pow(2)).equals(dec('0.01').toRational());
+    expectThat(dec('0.1').pow(-1)).equals(dec('10').toRational());
+    expectThat(dec('0.1').pow(-2)).equals(dec('100').toRational());
+    expectThat(dec('-1').pow(0)).equals(dec('1').toRational());
+    expectThat(dec('-1').pow(1)).equals(dec('-1').toRational());
+    expectThat(dec('-1').pow(2)).equals(dec('1').toRational());
+    expectThat(dec('-1').pow(-1)).equals(dec('-1').toRational());
+    expectThat(dec('-1').pow(-2)).equals(dec('1').toRational());
   });
   test('fromJson', () async {
     expectThat(Decimal.fromJson('1')).equals(Decimal.one);

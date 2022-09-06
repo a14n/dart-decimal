@@ -191,7 +191,7 @@ class Decimal implements Comparable<Decimal> {
   Decimal round({int scale = 0}) => _scaleAndApply(scale, (e) => e.round());
 
   Decimal _scaleAndApply(int scale, BigInt Function(Rational) f) {
-    final scaleFactor = ten.pow(scale).toRational();
+    final scaleFactor = ten.pow(scale);
     return (f(_rational * scaleFactor).toRational() / scaleFactor).toDecimal();
   }
 
@@ -207,7 +207,7 @@ class Decimal implements Comparable<Decimal> {
   /// x.shift(1); // 1234.567
   /// x.shift(-1); // 12.34567
   /// ```
-  Decimal shift(int value) => this * ten.pow(value);
+  Decimal shift(int value) => this * ten.pow(value).toDecimal();
 
   /// Clamps `this` to be in the range [lowerLimit]-[upperLimit].
   Decimal clamp(Decimal lowerLimit, Decimal upperLimit) =>
@@ -313,7 +313,7 @@ class Decimal implements Comparable<Decimal> {
       ].join();
     }
 
-    final limit = ten.pow(precision);
+    final limit = ten.pow(precision).toDecimal();
 
     var shift = one;
     final absValue = abs();
@@ -332,8 +332,8 @@ class Decimal implements Comparable<Decimal> {
 
   /// Returns `this` to the power of [exponent].
   ///
-  /// Returns [one] if the [exponent] equals `0`.
-  Decimal pow(int exponent) => _rational.pow(exponent).toDecimal();
+  /// Returns [Rational.one] if the [exponent] equals `0`.
+  Rational pow(int exponent) => _rational.pow(exponent);
 }
 
 /// Extensions on [Rational].
