@@ -1,5 +1,5 @@
 name: decimal
-version: 2.2.0
+version: 2.3.0
 description: >
   The decimal package allows you to deal with decimal numbers without losing
   precision.

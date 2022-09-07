@@ -1,3 +1,8 @@
+# 2.3.0 (2022-09-07)
+
+- (Breaking change) Fix `Decimal.pow` return type. This method now returns a `Rational` because `3.pow(-1)` (similar to `1/3`) could not be represented as a `Decimal`.
+- Allow `Rational.toDecimal()` customization via its new `toBigInt` parameter.
+
 # 2.2.0 (2022-04-19)
 
 - Fix [toStringAsExponential returned 10.00e+7 instead of 1.00e+8](https://github.com/a14n/dart-decimal/issues/74)
