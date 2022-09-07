@@ -342,16 +342,21 @@ extension RationalExt on Rational {
   ///
   /// Some rational like `1/3` can not be converted to decimal because they need
   /// an infinite number of digits. For those cases (where [hasFinitePrecision]
-  /// is `false`) a [scaleOnInfinitePrecision] can be provided to truncate its
-  /// decimal representation. Note that the returned decimal will not be exactly
-  /// equal to `this`.
-  Decimal toDecimal({int? scaleOnInfinitePrecision}) {
+  /// is `false`) a [scaleOnInfinitePrecision] and a [toBigInt] can be provided
+  /// to convert `this` to a [Decimal] representation. By default [toBigInt]
+  /// use [Rational.truncate] to limit the number of digit.
+  ///
+  /// Note that the returned decimal will not be exactly equal to `this`.
+  Decimal toDecimal({
+    int? scaleOnInfinitePrecision,
+    BigInt Function(Rational)? toBigInt,
+  }) {
     if (scaleOnInfinitePrecision == null || hasFinitePrecision) {
       return Decimal._(this);
     }
     final scaleFactor = _r10.pow(scaleOnInfinitePrecision);
-    return Decimal._(
-        (this * scaleFactor).truncate().toRational() / scaleFactor);
+    toBigInt ??= (value) => value.truncate();
+    return Decimal._(toBigInt(this * scaleFactor).toRational() / scaleFactor);
   }
 
   /// Returns `true` if this [Rational] has a finite precision.

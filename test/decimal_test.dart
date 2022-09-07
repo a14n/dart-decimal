@@ -411,5 +411,9 @@ void main() {
         .equals(dec('0.3'));
     expectThat(r(1, 4).toDecimal(scaleOnInfinitePrecision: 1))
         .equals(dec('0.25'));
+    expectThat(r(2, 3).toDecimal(
+      scaleOnInfinitePrecision: 1,
+      toBigInt: (v) => v.round(),
+    )).equals(dec('0.7'));
   });
 }
