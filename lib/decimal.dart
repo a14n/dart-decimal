@@ -24,7 +24,7 @@ final _r10 = Rational.fromInt(10);
 /// decimal system.
 class Decimal implements Comparable<Decimal> {
   /// Create a new decimal from its rational value.
-  Decimal._(this._rational) : assert(_rational.hasFinitePrecision);
+  Decimal._(this._rational) /*: assert(_rational.hasFinitePrecision)*/;
 
   /// Create a new [Decimal] from a [BigInt].
   factory Decimal.fromBigInt(BigInt value) => value.toRational().toDecimal();
@@ -64,8 +64,10 @@ class Decimal implements Comparable<Decimal> {
   /// Returns `true` if `this` is an integer.
   bool get isInteger => _rational.isInteger;
 
+  bool get isNegative => this < Decimal.zero;
+
   /// Returns a [Rational] corresponding to `1/this`.
-  Rational get inverse => _rational.inverse;
+  Decimal get inverse => _rational.inverse.toDecimal();
 
   @override
   bool operator ==(Object other) =>
@@ -78,11 +80,13 @@ class Decimal implements Comparable<Decimal> {
   @override
   String toString() {
     if (_rational.isInteger) return _rational.toString();
-    var value = toStringAsFixed(scale);
-    while (
-        value.contains('.') && (value.endsWith('0') || value.endsWith('.'))) {
-      value = value.substring(0, value.length - 1);
-    }
+    // return  truncate value.
+    final value = _rational.toDouble().toString();
+    // var value = toStringAsFixed(scale);
+    // while (
+    //     value.contains('.') && (value.endsWith('0') || value.endsWith('.'))) {
+    //   value = value.substring(0, value.length - 1);
+    // }
     return value;
   }
 
@@ -111,7 +115,8 @@ class Decimal implements Comparable<Decimal> {
       (_rational % other._rational).toDecimal();
 
   /// Division operator.
-  Rational operator /(Decimal other) => _rational / other._rational;
+  Decimal operator /(Decimal other) =>
+      (_rational / other._rational).toDecimal();
 
   /// Truncating division operator.
   ///
@@ -191,7 +196,7 @@ class Decimal implements Comparable<Decimal> {
   Decimal round({int scale = 0}) => _scaleAndApply(scale, (e) => e.round());
 
   Decimal _scaleAndApply(int scale, BigInt Function(Rational) f) {
-    final scaleFactor = ten.pow(scale);
+    final scaleFactor = ten.pow(scale)._rational;
     return (f(_rational * scaleFactor).toRational() / scaleFactor).toDecimal();
   }
 
@@ -207,7 +212,7 @@ class Decimal implements Comparable<Decimal> {
   /// x.shift(1); // 1234.567
   /// x.shift(-1); // 12.34567
   /// ```
-  Decimal shift(int value) => this * ten.pow(value).toDecimal();
+  Decimal shift(int value) => this * ten.pow(value);
 
   /// Clamps `this` to be in the range [lowerLimit]-[upperLimit].
   Decimal clamp(Decimal lowerLimit, Decimal upperLimit) =>
@@ -281,14 +286,14 @@ class Decimal implements Comparable<Decimal> {
       eValue--;
     }
     while (value >= ten) {
-      value = (value / ten).toDecimal();
+      value = value / ten;
       eValue++;
     }
     value = value.round(scale: fractionDigits);
     // If the rounded value is 10, then divide it once more to make it follow
     // the normalized scientific notation. See https://github.com/a14n/dart-decimal/issues/74
     if (value == ten) {
-      value = (value / ten).toDecimal();
+      value = value / ten;
       eValue++;
     }
 
@@ -313,7 +318,7 @@ class Decimal implements Comparable<Decimal> {
       ].join();
     }
 
-    final limit = ten.pow(precision).toDecimal();
+    final limit = ten.pow(precision);
 
     var shift = one;
     final absValue = abs();
@@ -324,16 +329,16 @@ class Decimal implements Comparable<Decimal> {
     }
     while (absValue * shift >= limit) {
       pad--;
-      shift = (shift / ten).toDecimal();
+      shift = shift / ten;
     }
-    final value = ((this * shift).round() / shift).toDecimal();
+    final value = (this * shift).round() / shift;
     return pad <= 0 ? value.toString() : value.toStringAsFixed(pad);
   }
 
   /// Returns `this` to the power of [exponent].
   ///
   /// Returns [Rational.one] if the [exponent] equals `0`.
-  Rational pow(int exponent) => _rational.pow(exponent);
+  Decimal pow(int exponent) => (_rational.pow(exponent)).toDecimal();
 }
 
 /// Extensions on [Rational].
@@ -351,12 +356,15 @@ extension RationalExt on Rational {
     int? scaleOnInfinitePrecision,
     BigInt Function(Rational)? toBigInt,
   }) {
-    if (scaleOnInfinitePrecision == null || hasFinitePrecision) {
-      return Decimal._(this);
+    Decimal d;
+    if (scaleOnInfinitePrecision == null /*|| hasFinitePrecision*/) {
+      d = Decimal._(this);
+    } else {
+      final scaleFactor = _r10.pow(scaleOnInfinitePrecision);
+      toBigInt ??= (value) => value.truncate();
+      d = Decimal._(toBigInt(this * scaleFactor).toRational() / scaleFactor);
     }
-    final scaleFactor = _r10.pow(scaleOnInfinitePrecision);
-    toBigInt ??= (value) => value.truncate();
-    return Decimal._(toBigInt(this * scaleFactor).toRational() / scaleFactor);
+    return d;
   }
 
   /// Returns `true` if this [Rational] has a finite precision.

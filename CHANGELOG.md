@@ -1,3 +1,9 @@
+# 2.3.1 (2022-09-08)
+
+- Fix `Decimal.pow`、`Decimal operator /`、 `Decimal operator /` return Decimal
+- Fix `Decimal.toString` return FinitePrecision String.
+- Fix `RationalExt.toDecimal()` 
+
 # 2.3.0 (2022-09-07)
 
 - (Breaking change) Fix `Decimal.pow` return type. This method now returns a `Rational` because `3.pow(-1)` (similar to `1/3`) could not be represented as a `Decimal`.
