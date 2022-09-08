@@ -221,6 +221,8 @@ class Decimal implements Comparable<Decimal> {
   /// The [BigInt] obtained by discarding any fractional digits from `this`.
   BigInt toBigInt() => _rational.toBigInt();
 
+  int toInt() => toBigInt().toInt();
+
   /// Returns `this` as a [double].
   ///
   /// If the number is not representable as a [double], an approximation is
