@@ -1,3 +1,7 @@
+# 2.3.1 (2022-11-24)
+
+- Update license file to be recognized by pub.dev.
+
 # 2.3.0 (2022-09-07)
 
 - (Breaking change) Fix `Decimal.pow` return type. This method now returns a `Rational` because `3.pow(-1)` (similar to `1/3`) could not be represented as a `Decimal`.
