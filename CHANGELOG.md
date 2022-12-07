@@ -1,3 +1,7 @@
+# 2.3.2 (2022-12-07)
+
+- Update files according to license.
+
 # 2.3.1 (2022-11-24)
 
 - Update license file to be recognized by pub.dev.
