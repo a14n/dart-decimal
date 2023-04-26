@@ -32,7 +32,7 @@ class Decimal implements Comparable<Decimal> {
   /// Create a new [Decimal] from an [int].
   factory Decimal.fromInt(int value) => Decimal.fromBigInt(BigInt.from(value));
 
-  /// Create a new [Decimal] from its [String] representation.
+  /// Create a new [Decimal] from its JSON representation.
   factory Decimal.fromJson(dynamic value) {
 
     if(value is int){
