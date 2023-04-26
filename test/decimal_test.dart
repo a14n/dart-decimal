@@ -381,6 +381,8 @@ void main() {
   });
   test('fromJson', () async {
     expectThat(Decimal.fromJson('1')).equals(Decimal.one);
+    expectThat(Decimal.fromJson(1)).equals(Decimal.one);
+    expectThat(Decimal.fromJson(1.0)).equals(Decimal.one);
     await expectThat(() => Decimal.fromJson('-1')).returnsNormally();
     await expectThat(() => Decimal.fromJson('1.')).returnsNormally();
     await expectThat(() => Decimal.fromJson('1.0')).returnsNormally();
