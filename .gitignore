@@ -3,3 +3,5 @@ packages
 pubspec.lock
 .pub/
 .dart_tool
+.idea/
+.idea/*
