@@ -17,6 +17,7 @@ import 'package:rational/rational.dart';
 
 class DecimalIntl {
   DecimalIntl(Decimal decimal) : this._rational(decimal.toRational());
+
   DecimalIntl._rational(this._rational);
 
   factory DecimalIntl._(dynamic number) {
@@ -54,6 +55,16 @@ class DecimalIntl {
 
   DecimalIntl operator /(dynamic other) =>
       DecimalIntl._(_rational / DecimalIntl._(other)._rational);
+
+  bool operator <(dynamic other) => _rational < DecimalIntl._(other)._rational;
+
+  bool operator <=(dynamic other) =>
+      _rational <= DecimalIntl._(other)._rational;
+
+  bool operator >(dynamic other) => _rational > DecimalIntl._(other)._rational;
+
+  bool operator >=(dynamic other) =>
+      _rational >= DecimalIntl._(other)._rational;
 
   DecimalIntl remainder(dynamic other) =>
       DecimalIntl._(_rational.remainder(DecimalIntl._(other)._rational));

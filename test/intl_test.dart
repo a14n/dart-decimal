@@ -18,7 +18,7 @@ import 'package:expector/expector.dart';
 import 'package:intl/intl.dart';
 import 'package:test/test.dart' show test;
 
-Decimal dec(String value) => Decimal.parse(value);
+DecimalIntl decIntl(String value) => DecimalIntl(Decimal.parse(value));
 
 void main() {
   test('Number.format output the same result as with double', () {
@@ -38,5 +38,35 @@ void main() {
             .equals(format.format(double.parse(number)));
       }
     }
+  });
+
+  test('Number.compactCurrency output the correct results', () {
+    final format = NumberFormat.compactCurrency(locale: 'en-US', symbol: '');
+    expectThat(format.format(decIntl('1000000000'))).equals('1B');
+  });
+
+  test('operator <(DecimalIntl other)', () {
+    expectThat(decIntl('1') < decIntl('1')).isFalse;
+    expectThat(decIntl('1') < decIntl('1.0')).isFalse;
+    expectThat(decIntl('1') < decIntl('1.1')).isTrue;
+    expectThat(decIntl('1') < decIntl('0.9')).isFalse;
+  });
+  test('operator <=(DecimalIntl other)', () {
+    expectThat(decIntl('1') <= decIntl('1')).isTrue;
+    expectThat(decIntl('1') <= decIntl('1.0')).isTrue;
+    expectThat(decIntl('1') <= decIntl('1.1')).isTrue;
+    expectThat(decIntl('1') <= decIntl('0.9')).isFalse;
+  });
+  test('operator >(DecimalIntl other)', () {
+    expectThat(decIntl('1') > decIntl('1')).isFalse;
+    expectThat(decIntl('1') > decIntl('1.0')).isFalse;
+    expectThat(decIntl('1') > decIntl('1.1')).isFalse;
+    expectThat(decIntl('1') > decIntl('0.9')).isTrue;
+  });
+  test('operator >=(DecimalIntl other)', () {
+    expectThat(decIntl('1') >= decIntl('1')).isTrue;
+    expectThat(decIntl('1') >= decIntl('1.0')).isTrue;
+    expectThat(decIntl('1') >= decIntl('1.1')).isFalse;
+    expectThat(decIntl('1') >= decIntl('0.9')).isTrue;
   });
 }
