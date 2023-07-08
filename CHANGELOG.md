@@ -1,3 +1,7 @@
+# 2.3.3 (2023-07-08)
+
+- [Introduce logical operators to DecimalIntl to support intl 0.18.0](https://github.com/a14n/dart-decimal/pull/98)
+
 # 2.3.2 (2022-12-07)
 
 - Update files according to license.
