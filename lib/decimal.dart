@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math' as math;
+
 import 'package:rational/rational.dart';
 
 final _i0 = BigInt.zero;
@@ -213,6 +215,57 @@ class Decimal implements Comparable<Decimal> {
   Decimal clamp(Decimal lowerLimit, Decimal upperLimit) =>
       _rational.clamp(lowerLimit._rational, upperLimit._rational).toDecimal();
 
+  Decimal roundHalfEven({int scale = 0}) {
+    final originalValue = this;
+    final currentScale = originalValue.scale;
+
+    if (scale >= currentScale) {
+      return originalValue;
+    }
+
+    final scaleToRemove = currentScale - scale;
+
+    final scalingFactor = math.pow(10, currentScale).toDouble().toDecimal();
+    final scaledValue = (originalValue * scalingFactor).toBigInt();
+
+    final dividend = scaledValue;
+    final divisor = BigInt.from(10).pow(scaleToRemove);
+
+    final quotient = dividend ~/ divisor;
+    final remainder = dividend.remainder(divisor).abs();
+    final isQuotientPositive = dividend.sign == divisor.sign;
+
+    final newScalingFactor = math.pow(10, scale).toDouble().toDecimal();
+
+    if (remainder != BigInt.zero) {
+      if (shouldIncrement(
+          divisor: divisor, quotient: quotient, remainder: remainder)) {
+        final adjustedQuotient =
+            quotient + (isQuotientPositive ? BigInt.one : -BigInt.one);
+
+        return (adjustedQuotient.toRational() / newScalingFactor.toRational())
+            .toDecimal();
+      }
+    }
+    return (quotient.toRational() / newScalingFactor.toRational()).toDecimal();
+  }
+
+  bool shouldIncrement({
+    required BigInt divisor,
+    required BigInt quotient,
+    required BigInt remainder,
+  }) {
+    final middleDivisorComparison = (remainder * BigInt.two).compareTo(divisor);
+
+    if (middleDivisorComparison < 0) {
+      return false;
+    } else if (middleDivisorComparison > 0) {
+      return true;
+    } else {
+      return quotient.isOdd;
+    }
+  }
+
   /// The [BigInt] obtained by discarding any fractional digits from `this`.
   BigInt toBigInt() => _rational.toBigInt();
 
@@ -386,4 +439,10 @@ extension BigIntExt on BigInt {
 extension IntExt on int {
   /// This [int] as a [Decimal].
   Decimal toDecimal() => Decimal.fromInt(this);
+}
+
+/// Extensions on [double].
+extension DoubleExt on double {
+  /// This [int] as a [Decimal].
+  Decimal toDecimal() => Decimal.parse(toString());
 }

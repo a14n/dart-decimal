@@ -267,6 +267,75 @@ void main() {
     expectThat(dec('2.51').clamp(dec('2.6'), dec('3'))).equals(dec('2.6'));
     expectThat(dec('2.51').clamp(dec('1'), dec('2.5'))).equals(dec('2.5'));
   });
+
+  group('roundHalfEven - scale -', () {
+    test('0', () {
+      expectThat(dec('5.5').roundHalfEven()).equals(dec('6'));
+      expectThat(dec('2.5').roundHalfEven()).equals(dec('2'));
+      expectThat(dec('1.6').roundHalfEven()).equals(dec('2'));
+      expectThat(dec('1.55').roundHalfEven()).equals(dec('2'));
+      expectThat(dec('1.1').roundHalfEven()).equals(dec('1'));
+      expectThat(dec('1.0').roundHalfEven()).equals(dec('1'));
+      expectThat(dec('-1.0').roundHalfEven()).equals(dec('-1'));
+      expectThat(dec('-1.1').roundHalfEven()).equals(dec('-1'));
+      expectThat(dec('-1.6').roundHalfEven()).equals(dec('-2'));
+      expectThat(dec('-2.5').roundHalfEven()).equals(dec('-2'));
+      expectThat(dec('-5.5').roundHalfEven()).equals(dec('-6'));
+    });
+
+    test('1', () {
+      expectThat(dec('5.5').roundHalfEven(scale: 1)).equals(dec('5.5'));
+      expectThat(dec('2.5').roundHalfEven(scale: 1)).equals(dec('2.5'));
+      expectThat(dec('1.6').roundHalfEven(scale: 1)).equals(dec('1.6'));
+      expectThat(dec('1.1').roundHalfEven(scale: 1)).equals(dec('1.1'));
+      expectThat(dec('1.0').roundHalfEven(scale: 1)).equals(dec('1.0'));
+      expectThat(dec('1.55').roundHalfEven(scale: 1)).equals(dec('1.6'));
+      expectThat(dec('3.145').roundHalfEven(scale: 1)).equals(dec('3.1'));
+      expectThat(dec('11.505').roundHalfEven(scale: 1)).equals(dec('11.5'));
+      expectThat(dec('12.5645').roundHalfEven(scale: 1)).equals(dec('12.6'));
+      expectThat(dec('12.5655').roundHalfEven(scale: 1)).equals(dec('12.6'));
+      expectThat(dec('12.4655').roundHalfEven(scale: 1)).equals(dec('12.5'));
+      expectThat(dec('14.505').roundHalfEven(scale: 1)).equals(dec('14.5'));
+      expectThat(dec('14.504').roundHalfEven(scale: 1)).equals(dec('14.5'));
+      expectThat(dec('14.506').roundHalfEven(scale: 1)).equals(dec('14.5'));
+      expectThat(dec('14.5').roundHalfEven(scale: 1)).equals(dec('14.5'));
+      expectThat(dec('13.055').roundHalfEven(scale: 1)).equals(dec('13.1'));
+      expectThat(dec('16.055').roundHalfEven(scale: 1)).equals(dec('16.1'));
+      expectThat(dec('17.555').roundHalfEven(scale: 1)).equals(dec('17.6'));
+      expectThat(dec('20.555').roundHalfEven(scale: 1)).equals(dec('20.6'));
+      expectThat(dec('21.5555').roundHalfEven(scale: 1)).equals(dec('21.6'));
+      expectThat(dec('24.5555').roundHalfEven(scale: 1)).equals(dec('24.6'));
+    });
+
+    test('2', () {
+      expectThat(dec('5.5').roundHalfEven(scale: 2)).equals(dec('5.50'));
+      expectThat(dec('2.5').roundHalfEven(scale: 2)).equals(dec('2.50'));
+      expectThat(dec('1.6').roundHalfEven(scale: 2)).equals(dec('1.60'));
+      expectThat(dec('1.55').roundHalfEven(scale: 2)).equals(dec('1.55'));
+      expectThat(dec('1.1').roundHalfEven(scale: 2)).equals(dec('1.10'));
+      expectThat(dec('1.0').roundHalfEven(scale: 2)).equals(dec('1.00'));
+      expectThat(dec('3.145').roundHalfEven(scale: 2)).equals(dec('3.14'));
+      expectThat(dec('11.505').roundHalfEven(scale: 2)).equals(dec('11.50'));
+      expectThat(dec('12.5645').roundHalfEven(scale: 2)).equals(dec('12.56'));
+      expectThat(dec('12.5655').roundHalfEven(scale: 2)).equals(dec('12.57'));
+      expectThat(dec('12.4655').roundHalfEven(scale: 2)).equals(dec('12.47'));
+      expectThat(dec('14.505').roundHalfEven(scale: 2)).equals(dec('14.50'));
+      expectThat(dec('14.504').roundHalfEven(scale: 2)).equals(dec('14.50'));
+      expectThat(dec('14.506').roundHalfEven(scale: 2)).equals(dec('14.51'));
+      expectThat(dec('14.5').roundHalfEven(scale: 2)).equals(dec('14.50'));
+      expectThat(dec('13.055').roundHalfEven(scale: 2)).equals(dec('13.06'));
+      expectThat(dec('16.055').roundHalfEven(scale: 2)).equals(dec('16.06'));
+      expectThat(dec('17.555').roundHalfEven(scale: 2)).equals(dec('17.56'));
+      expectThat(dec('20.555').roundHalfEven(scale: 2)).equals(dec('20.56'));
+      expectThat(dec('21.5555').roundHalfEven(scale: 2)).equals(dec('21.56'));
+      expectThat(dec('24.5555').roundHalfEven(scale: 2)).equals(dec('24.56'));
+    });
+    test('4', () {
+      expectThat(dec('0.133656866839782').roundHalfEven(scale: 4))
+          .equals(dec('0.1337'));
+    });
+  });
+
   test('toBigInt()', () {
     expectThat(dec('2.51').toBigInt()).equals(BigInt.from(2));
     expectThat(dec('-2.51').toBigInt()).equals(BigInt.from(-2));
