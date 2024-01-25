@@ -215,6 +215,34 @@ class Decimal implements Comparable<Decimal> {
   Decimal clamp(Decimal lowerLimit, Decimal upperLimit) =>
       _rational.clamp(lowerLimit._rational, upperLimit._rational).toDecimal();
 
+  ///Rounding mode that directs rounding to the 'nearest neighbor',
+  ///unless both neighbors are equidistant, in which case rounding is done
+  ///towards the even neighbor. If the digit to the left of the discarded
+  ///fraction is odd, the behavior is equivalent to rounding up (ceil);
+  ///if it is even, the behavior is equivalent to rounding down (floor).
+  ///It is worth noting that this is the rounding mode that statistically
+  ///minimizes cumulative error when repeatedly applied over a sequence of calculations.
+  ///It is occasionally known as 'banker's rounding' and is predominantly
+  ///used in the United States.
+  ///This function is based on the (ROUND_HALF_EVEN) function in Java.
+  ///
+  /// Example
+  ///
+  /// ```dart
+  ///Decimal.parse('12.5645').roundHalfEven(scale: 2); // 12.56
+  ///Decimal.parse('12.5655').roundHalfEven(scale: 2); // 12.57
+  ///Decimal.parse('5.5').roundHalfEven(); // 6
+  ///Decimal.parse('2.5').roundHalfEven(); // 2
+  ///Decimal.parse('1.6').roundHalfEven(); // 2
+  ///Decimal.parse('1.1').roundHalfEven(); // 1
+  ///Decimal.parse('1.0').roundHalfEven(); // 1
+  ///Decimal.parse('-1.0').roundHalfEven(); // -1
+  ///Decimal.parse('-1.1').roundHalfEven(); // -1
+  ///Decimal.parse('-1.6').roundHalfEven(); // -2
+  ///Decimal.parse('-2.5').roundHalfEven(); // -2
+  ///Decimal.parse('-5.5').roundHalfEven(); // -6
+  /// ```
+
   Decimal roundHalfEven({int scale = 0}) {
     final originalValue = this;
     final currentScale = originalValue.scale;

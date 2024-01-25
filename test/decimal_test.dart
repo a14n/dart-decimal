@@ -498,6 +498,14 @@ void main() {
     )).equals(dec('0.7'));
   });
 
+  test('IntExt', () {
+    expectThat(3.toDecimal()).equals(dec('3'));
+    expectThat(1.toDecimal()).equals(dec('1'));
+    expectThat(0.toDecimal()).equals(dec('0'));
+    expectThat((-1).toDecimal()).equals(dec('-1'));
+    expectThat((-3).toDecimal()).equals(dec('-3'));
+  });
+
   test('DoubleExt', () {
     expectThat(3.4569.toDecimal()).equals(dec('3.4569'));
     expectThat(1.1.toDecimal()).equals(dec('1.1'));
