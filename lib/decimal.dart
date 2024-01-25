@@ -225,7 +225,7 @@ class Decimal implements Comparable<Decimal> {
 
     final scaleToRemove = currentScale - scale;
 
-    final scalingFactor = math.pow(10, currentScale).toDouble().toDecimal();
+    final scalingFactor = math.pow(10, currentScale).toDecimal();
     final scaledValue = (originalValue * scalingFactor).toBigInt();
 
     final dividend = scaledValue;
@@ -235,22 +235,22 @@ class Decimal implements Comparable<Decimal> {
     final remainder = dividend.remainder(divisor).abs();
     final isQuotientPositive = dividend.sign == divisor.sign;
 
-    final newScalingFactor = math.pow(10, scale).toDouble().toDecimal();
+    final newScalingFactor = math.pow(10, scale).toDecimal();
 
-    if (remainder != BigInt.zero) {
-      if (shouldIncrement(
-          divisor: divisor, quotient: quotient, remainder: remainder)) {
-        final adjustedQuotient =
-            quotient + (isQuotientPositive ? BigInt.one : -BigInt.one);
+    Rational quotientRational = quotient.toRational();
 
-        return (adjustedQuotient.toRational() / newScalingFactor.toRational())
-            .toDecimal();
-      }
+    if (remainder != BigInt.zero &&
+        _shouldIncrement(
+            divisor: divisor, quotient: quotient, remainder: remainder)) {
+      final adjustedQuotient =
+          quotient + (isQuotientPositive ? BigInt.one : -BigInt.one);
+      quotientRational = adjustedQuotient.toRational();
     }
-    return (quotient.toRational() / newScalingFactor.toRational()).toDecimal();
+
+    return (quotientRational / newScalingFactor.toRational()).toDecimal();
   }
 
-  bool shouldIncrement({
+  bool _shouldIncrement({
     required BigInt divisor,
     required BigInt quotient,
     required BigInt remainder,
@@ -443,6 +443,12 @@ extension IntExt on int {
 
 /// Extensions on [double].
 extension DoubleExt on double {
-  /// This [int] as a [Decimal].
+  /// This [double] as a [Decimal].
   Decimal toDecimal() => Decimal.parse(toString());
+}
+
+/// Extensions on [num].
+extension NumExt on num {
+  /// This [num] as a [Decimal].
+  Decimal toDecimal() => Decimal.parse(toDouble().toString());
 }

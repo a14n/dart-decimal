@@ -497,4 +497,24 @@ void main() {
       toBigInt: (v) => v.round(),
     )).equals(dec('0.7'));
   });
+
+  test('DoubleExt', () {
+    expectThat(3.4569.toDecimal()).equals(dec('3.4569'));
+    expectThat(1.1.toDecimal()).equals(dec('1.1'));
+    expectThat(1.0.toDecimal()).equals(dec('1'));
+    expectThat(0.0.toDecimal()).equals(dec('0'));
+    expectThat((-1.0).toDecimal()).equals(dec('-1'));
+    expectThat((-1.1).toDecimal()).equals(dec('-1.1'));
+    expectThat((-3.4569).toDecimal()).equals(dec('-3.4569'));
+  });
+
+  test('NumExt', () {
+    expectThat(num.parse('3.4569').toDecimal()).equals(dec('3.4569'));
+    expectThat(num.parse('1.1').toDecimal()).equals(dec('1.1'));
+    expectThat(num.parse('1.0').toDecimal()).equals(dec('1'));
+    expectThat(num.parse('0.0').toDecimal()).equals(dec('0'));
+    expectThat(num.parse('-1.0').toDecimal()).equals(dec('-1'));
+    expectThat(num.parse('-1.1').toDecimal()).equals(dec('-1.1'));
+    expectThat(num.parse('-3.4569').toDecimal()).equals(dec('-3.4569'));
+  });
 }
