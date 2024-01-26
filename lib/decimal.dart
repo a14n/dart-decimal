@@ -226,7 +226,8 @@ class Decimal implements Comparable<Decimal> {
   ///used in the United States.
   ///This function is based on the (ROUND_HALF_EVEN) function in Java.
   ///
-  /// Example
+  /// An optional [scale] value can be provided as parameter to indicate the
+  /// digit used as reference for the operation.
   ///
   /// ```dart
   ///Decimal.parse('12.5645').roundHalfEven(scale: 2); // 12.56
