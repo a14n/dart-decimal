@@ -68,5 +68,14 @@ main() {
 }
 ```
 
+## Parsing with intl
+
+You can use the `NumberFormat` from [intl](https://pub.dev/packages/intl) package to parse formatted decimals
+
+```dart
+NumberFormat currencyFormatter = NumberFormat.simpleCurrency(name: 'USD');
+Decimal.parseWith(currencyFormatter, '\$3.14'); // => 3.14 
+```
+
 ## License
 Apache 2.0
