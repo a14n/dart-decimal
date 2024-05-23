@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'package:decimal/dart_decimal_number_parser.dart';
+import 'package:intl/intl.dart';
 import 'package:rational/rational.dart';
 
 final _i0 = BigInt.zero;
@@ -40,10 +42,22 @@ class Decimal implements Comparable<Decimal> {
   /// Parses [source] as a decimal literal and returns its value as [Decimal].
   static Decimal parse(String source) => Rational.parse(source).toDecimal();
 
-  /// Parses [source] as a decimal literal and returns its value as [Decimal].
+  /// Parses [source] as a decimal literal and returns its value as [Decimal], or null if the parsing fails.
   static Decimal? tryParse(String source) {
     try {
       return Decimal.parse(source);
+    } on FormatException {
+      return null;
+    }
+  }
+
+  /// Parses [source] as a decimal literal using the provided number formatter and returns its value as [Decimal].
+  static Decimal parseWith(NumberFormat format, String source) => DartDecimalNumberParser(format, source).value!;
+
+  /// Parses [source] as a decimal literal using the provided number formatter and returns its value as [Decimal], or null if the parsing fails.
+  static Decimal? tryParseWith(NumberFormat format, String source) {
+    try {
+      return Decimal.parseWith(format, source);
     } on FormatException {
       return null;
     }
