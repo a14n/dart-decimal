@@ -68,5 +68,7 @@ main() {
 }
 ```
 
+WARNING: For now (2024.05.30) intl doesn't work with `NumberFormat.maximumFractionDigits` greater than 15 on web plateform and 18 otherwise.
+
 ## License
 Apache 2.0
