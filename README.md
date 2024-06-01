@@ -70,5 +70,14 @@ main() {
 
 WARNING: For now (2024.05.30) intl doesn't work with `NumberFormat.maximumFractionDigits` greater than 15 on web plateform and 18 otherwise.
 
+## Parsing with intl
+
+You can use the `NumberFormat` from [intl](https://pub.dev/packages/intl) package to parse formatted decimals
+
+```dart
+NumberFormat currencyFormatter = NumberFormat.simpleCurrency(name: 'USD');
+Decimal.parseWith(currencyFormatter, '\$3.14'); // => 3.14 
+```
+
 ## License
 Apache 2.0

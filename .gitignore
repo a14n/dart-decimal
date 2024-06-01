@@ -3,3 +3,6 @@ packages
 pubspec.lock
 .pub/
 .dart_tool
+
+.DS_Store
+.idea/
