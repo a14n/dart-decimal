@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math';
+
 import 'package:decimal/decimal.dart';
 import 'package:decimal/intl.dart';
 import 'package:expector/expector.dart';
@@ -38,6 +40,38 @@ void main() {
             .equals(format.format(double.parse(number)));
       }
     }
+  });
+
+  test('Number.format outputs result for long decimal', () {
+    final format = NumberFormat.decimalPattern('en-US');
+    expectThat(format.format(DecimalIntl(Decimal.parse(
+            '12345678901234567890123456789012345678901234567890.1234567890123456789012345678901234567890123456789'))))
+        .equals(
+            '12,345,678,901,234,567,890,123,456,789,012,345,678,901,234,567,890.123');
+  });
+
+  test('Number.format outputs the same result as origin', () {
+    // intl doesn't work with maximumFractionDigits > 15 on web and > 18 otherwise
+    const maxPreciseWebInt = 0x20000000000000;
+    final maxFractionalDigitsForIntl = log(maxPreciseWebInt) ~/ log(10);
+    final format = NumberFormat()
+      ..turnOffGrouping()
+      ..maximumFractionDigits = maxFractionalDigitsForIntl;
+    final numbers = <String>[
+      '0',
+      '1',
+      '-1.123',
+      '123456789.0123',
+    ];
+    for (var number in numbers) {
+      expectThat(format.format(DecimalIntl(Decimal.parse(number))))
+          .equals(number);
+    }
+
+    expectThat(format.format(DecimalIntl(Decimal.parse(
+            '12345678901234567890123456789012345678901234567890.1234567890123456789012345678901234567890123456789'))))
+        .equals(
+            '12345678901234567890123456789012345678901234567890.123456789012346');
   });
 
   test('Number.compactCurrency output the correct results', () {
