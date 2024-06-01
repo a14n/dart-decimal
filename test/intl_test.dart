@@ -18,89 +18,95 @@ import 'package:decimal/decimal.dart';
 import 'package:decimal/intl.dart';
 import 'package:expector/expector.dart';
 import 'package:intl/intl.dart';
-import 'package:test/test.dart' show test;
+import 'package:test/test.dart' show group, test;
 
-DecimalIntl decIntl(String value) => DecimalIntl(Decimal.parse(value));
+Decimal dec(String value) => Decimal.parse(value);
 
 void main() {
-  test('Number.format output the same result as with double', () {
-    final formats = <NumberFormat>[
-      NumberFormat.decimalPattern('en-US'),
-      NumberFormat.decimalPattern('fr-FR'),
-    ];
-    final numbers = <String>[
-      '0',
-      '1',
-      '-1.123',
-      '123456789.0123',
-    ];
-    for (var format in formats) {
-      for (var number in numbers) {
-        expectThat(format.format(DecimalIntl(Decimal.parse(number))))
-            .equals(format.format(double.parse(number)));
+  group('DecimalFormatter.format', () {
+    test('outputs the same result as with double', () {
+      final formats = <NumberFormat>[
+        NumberFormat.decimalPattern('en-US'),
+        NumberFormat.decimalPattern('fr-FR'),
+      ];
+      final numbers = <String>[
+        '0',
+        '1',
+        '-1.123',
+        '123456789.0123',
+      ];
+      for (var format in formats) {
+        final formatter = DecimalFormatter(format);
+        for (var number in numbers) {
+          expectThat(formatter.format(dec(number)))
+              .equals(format.format(double.parse(number)));
+        }
       }
-    }
-  });
+    });
 
-  test('Number.format outputs result for long decimal', () {
-    final format = NumberFormat.decimalPattern('en-US');
-    expectThat(format.format(DecimalIntl(Decimal.parse(
-            '12345678901234567890123456789012345678901234567890.1234567890123456789012345678901234567890123456789'))))
-        .equals(
-            '12,345,678,901,234,567,890,123,456,789,012,345,678,901,234,567,890.123');
-  });
+    test('outputs result for long decimal', () {
+      final format = NumberFormat.decimalPattern('en-US');
+      final formatter = DecimalFormatter(format);
+      expectThat(formatter.format(dec(
+              '12345678901234567890123456789012345678901234567890.1234567890123456789012345678901234567890123456789')))
+          .equals(
+              '12,345,678,901,234,567,890,123,456,789,012,345,678,901,234,567,890.123');
+    });
 
-  test('Number.format outputs the same result as origin', () {
-    // intl doesn't work with maximumFractionDigits > 15 on web and > 18 otherwise
-    const maxPreciseWebInt = 0x20000000000000;
-    final maxFractionalDigitsForIntl = log(maxPreciseWebInt) ~/ log(10);
-    final format = NumberFormat()
-      ..turnOffGrouping()
-      ..maximumFractionDigits = maxFractionalDigitsForIntl;
-    final numbers = <String>[
-      '0',
-      '1',
-      '-1.123',
-      '123456789.0123',
-    ];
-    for (var number in numbers) {
-      expectThat(format.format(DecimalIntl(Decimal.parse(number))))
-          .equals(number);
-    }
+    test('outputs the same result as origin', () {
+      // intl doesn't work with maximumFractionDigits > 15 on web and > 18 otherwise
+      const maxPreciseWebInt = 0x20000000000000;
+      final maxFractionalDigitsForIntl = log(maxPreciseWebInt) ~/ log(10);
+      final format = NumberFormat()
+        ..turnOffGrouping()
+        ..maximumFractionDigits = maxFractionalDigitsForIntl;
+      final formatter = DecimalFormatter(format);
+      final numbers = <String>[
+        '0',
+        '1',
+        '-1.123',
+        '123456789.0123',
+      ];
+      for (var number in numbers) {
+        expectThat(formatter.format(dec(number))).equals(number);
+      }
 
-    expectThat(format.format(DecimalIntl(Decimal.parse(
-            '12345678901234567890123456789012345678901234567890.1234567890123456789012345678901234567890123456789'))))
-        .equals(
-            '12345678901234567890123456789012345678901234567890.123456789012346');
-  });
+      expectThat(formatter.format(dec(
+              '12345678901234567890123456789012345678901234567890.1234567890123456789012345678901234567890123456789')))
+          .equals(
+              '12345678901234567890123456789012345678901234567890.123456789012346');
+    });
 
-  test('Number.compactCurrency output the correct results', () {
-    final format = NumberFormat.compactCurrency(locale: 'en-US', symbol: '');
-    expectThat(format.format(decIntl('1000000000'))).equals('1B');
+    test('with compactCurrency outputs the correct results', () {
+      final format = NumberFormat.compactCurrency(locale: 'en-US', symbol: '');
+      final formatter = DecimalFormatter(format);
+      expectThat(formatter.format(dec('1000000000'))).equals('1B');
+    });
   });
+  group('DecimalFormatter.parse', () {
+    group('DecimalFormatter.parse', () {
+      test('can parse plain decimal', () {
+        final plainFormatter = DecimalFormatter(NumberFormat());
+        expectThat(plainFormatter.parse('3.14')).equals(dec('3.14'));
+        expectThat(plainFormatter.parse('03.14')).equals(dec('3.14'));
+        expectThat(plainFormatter.parse('-3.14')).equals(-dec('3.14'));
+        expectThat(plainFormatter.tryParse('3.14')).equals(dec('3.14'));
+        expectThat(plainFormatter.tryParse('03.14')).equals(dec('3.14'));
+        expectThat(plainFormatter.tryParse('-3.14')).equals(-dec('3.14'));
+        expectThat(plainFormatter.tryParse('qsfd')).isNull;
+      });
+    });
 
-  test('operator <(DecimalIntl other)', () {
-    expectThat(decIntl('1') < decIntl('1')).isFalse;
-    expectThat(decIntl('1') < decIntl('1.0')).isFalse;
-    expectThat(decIntl('1') < decIntl('1.1')).isTrue;
-    expectThat(decIntl('1') < decIntl('0.9')).isFalse;
-  });
-  test('operator <=(DecimalIntl other)', () {
-    expectThat(decIntl('1') <= decIntl('1')).isTrue;
-    expectThat(decIntl('1') <= decIntl('1.0')).isTrue;
-    expectThat(decIntl('1') <= decIntl('1.1')).isTrue;
-    expectThat(decIntl('1') <= decIntl('0.9')).isFalse;
-  });
-  test('operator >(DecimalIntl other)', () {
-    expectThat(decIntl('1') > decIntl('1')).isFalse;
-    expectThat(decIntl('1') > decIntl('1.0')).isFalse;
-    expectThat(decIntl('1') > decIntl('1.1')).isFalse;
-    expectThat(decIntl('1') > decIntl('0.9')).isTrue;
-  });
-  test('operator >=(DecimalIntl other)', () {
-    expectThat(decIntl('1') >= decIntl('1')).isTrue;
-    expectThat(decIntl('1') >= decIntl('1.0')).isTrue;
-    expectThat(decIntl('1') >= decIntl('1.1')).isFalse;
-    expectThat(decIntl('1') >= decIntl('0.9')).isTrue;
+    test('can parse currency decimal', () {
+      final currencyFormatter =
+          DecimalFormatter(NumberFormat.simpleCurrency(name: 'USD'));
+      expectThat(currencyFormatter.parse(r'$3.14')).equals(dec('3.14'));
+      expectThat(currencyFormatter.parse(r'$03.14')).equals(dec('3.14'));
+      expectThat(currencyFormatter.parse(r'-$3.14')).equals(-dec('3.14'));
+      expectThat(currencyFormatter.tryParse(r'$3.14')).equals(dec('3.14'));
+      expectThat(currencyFormatter.tryParse(r'$03.14')).equals(dec('3.14'));
+      expectThat(currencyFormatter.tryParse(r'-$3.14')).equals(-dec('3.14'));
+      expectThat(currencyFormatter.tryParse('qsfd')).isNull;
+    });
   });
 }

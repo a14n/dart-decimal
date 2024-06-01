@@ -41,8 +41,7 @@ d('0.2') + d('0.1'); // => 0.3
 ## Formatting with intl
 
 You can use the [intl](https://pub.dev/packages/intl) package to format decimal
-by wrapping the decimal into `DecimalIntl` from the `package:decimal/intl.dart`
-library:
+with `DecimalFormat` from the `package:decimal/intl.dart` library:
 
 ```dart
 import 'package:decimal/decimal.dart';
@@ -50,12 +49,12 @@ import 'package:decimal/intl.dart';
 
 main() {
   var value = Decimal.parse('1234.56');
-  var formatter = NumberFormat.decimalPattern('en-US');
-  print(formatter.format(DecimalIntl(value)));
+  var formatter = DecimalFormatter(NumberFormat.decimalPattern('en-US'));
+  print(formatter.format(value));
 }
 ```
 
-Tip: you can define an extension to make it less verbose:
+Tip: you can define an extension to make it more fluent:
 
 ```dart
 extension on Decimal {
@@ -63,7 +62,7 @@ extension on Decimal {
 }
 main() {
   var value = Decimal.parse('1234.56');
-  var formatter = NumberFormat.decimalPattern('en-US');
+  var formatter = DecimalFormatter(NumberFormat.decimalPattern('en-US'));
   print(value.formatWith(formatter));
 }
 ```
@@ -75,8 +74,8 @@ WARNING: For now (2024.05.30) intl doesn't work with `NumberFormat.maximumFracti
 You can use the `NumberFormat` from [intl](https://pub.dev/packages/intl) package to parse formatted decimals
 
 ```dart
-NumberFormat currencyFormatter = NumberFormat.simpleCurrency(name: 'USD');
-Decimal.parseWith(currencyFormatter, '\$3.14'); // => 3.14 
+var currencyFormatter = DecimalFormatter(NumberFormat.simpleCurrency(name: 'USD'));
+currencyFormatter.parse('\$3.14'); // => 3.14
 ```
 
 ## License

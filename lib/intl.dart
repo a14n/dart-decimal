@@ -13,74 +13,121 @@
 // limitations under the License.
 
 import 'package:decimal/decimal.dart';
+import 'package:intl/intl.dart';
 import 'package:rational/rational.dart';
 
-class DecimalIntl {
-  DecimalIntl(Decimal decimal) : this._rational(decimal.toRational());
+class DecimalFormatter {
+  DecimalFormatter(this.numberFormat);
 
-  DecimalIntl._rational(this._rational);
+  final NumberFormat numberFormat;
 
-  factory DecimalIntl._(dynamic number) {
-    if (number is DecimalIntl) {
+  /// Parses [text] as a decimal literal using the provided number formatter and returns its value as [Decimal]
+  Decimal parse(String text) =>
+      _DartDecimalNumberParser(numberFormat, text).value!;
+
+  /// Parses [text] as a decimal literal using the provided number formatter and returns its value as [Decimal], or null if the parsing fails.
+  Decimal? tryParse(String text) {
+    try {
+      return parse(text);
+    } on FormatException {
+      return null;
+    }
+  }
+
+  /// Format [number] according to our pattern and return the formatted string.
+  String format(Decimal number) => numberFormat.format(_DecimalIntl(number));
+}
+
+class _DecimalIntl {
+  _DecimalIntl(Decimal decimal) : this._rational(decimal.toRational());
+
+  _DecimalIntl._rational(this._rational);
+
+  factory _DecimalIntl._(dynamic number) {
+    if (number is _DecimalIntl) {
       return number;
     } else if (number is Decimal) {
-      return DecimalIntl(number);
+      return _DecimalIntl(number);
     } else if (number is Rational) {
-      return DecimalIntl._rational(number);
+      return _DecimalIntl._rational(number);
     } else if (number is BigInt) {
-      return DecimalIntl(Decimal.fromBigInt(number));
+      return _DecimalIntl(Decimal.fromBigInt(number));
     } else if (number is int) {
-      return DecimalIntl(Decimal.fromInt(number));
+      return _DecimalIntl(Decimal.fromInt(number));
     }
-    return DecimalIntl(Decimal.parse(number.toString()));
+    return _DecimalIntl(Decimal.parse(number.toString()));
   }
 
   final Rational _rational;
 
   bool get isNegative => _rational < Rational.zero;
 
-  DecimalIntl abs() => DecimalIntl._rational(_rational.abs());
+  _DecimalIntl abs() => _DecimalIntl._rational(_rational.abs());
 
-  DecimalIntl operator ~/(dynamic other) =>
-      DecimalIntl._(_rational ~/ DecimalIntl._(other)._rational);
+  _DecimalIntl operator ~/(dynamic other) =>
+      _DecimalIntl._(_rational ~/ _DecimalIntl._(other)._rational);
 
-  DecimalIntl operator +(dynamic other) =>
-      DecimalIntl._(_rational + DecimalIntl._(other)._rational);
+  _DecimalIntl operator +(dynamic other) =>
+      _DecimalIntl._(_rational + _DecimalIntl._(other)._rational);
 
-  DecimalIntl operator -(dynamic other) =>
-      DecimalIntl._(_rational - DecimalIntl._(other)._rational);
+  _DecimalIntl operator -(dynamic other) =>
+      _DecimalIntl._(_rational - _DecimalIntl._(other)._rational);
 
-  DecimalIntl operator *(dynamic other) =>
-      DecimalIntl._(_rational * DecimalIntl._(other)._rational);
+  _DecimalIntl operator *(dynamic other) =>
+      _DecimalIntl._(_rational * _DecimalIntl._(other)._rational);
 
-  DecimalIntl operator /(dynamic other) =>
-      DecimalIntl._(_rational / DecimalIntl._(other)._rational);
+  _DecimalIntl operator /(dynamic other) =>
+      _DecimalIntl._(_rational / _DecimalIntl._(other)._rational);
 
-  bool operator <(dynamic other) => _rational < DecimalIntl._(other)._rational;
+  bool operator <(dynamic other) => _rational < _DecimalIntl._(other)._rational;
 
   bool operator <=(dynamic other) =>
-      _rational <= DecimalIntl._(other)._rational;
+      _rational <= _DecimalIntl._(other)._rational;
 
-  bool operator >(dynamic other) => _rational > DecimalIntl._(other)._rational;
+  bool operator >(dynamic other) => _rational > _DecimalIntl._(other)._rational;
 
   bool operator >=(dynamic other) =>
-      _rational >= DecimalIntl._(other)._rational;
+      _rational >= _DecimalIntl._(other)._rational;
 
-  DecimalIntl remainder(dynamic other) =>
-      DecimalIntl._(_rational.remainder(DecimalIntl._(other)._rational));
+  _DecimalIntl remainder(dynamic other) =>
+      _DecimalIntl._(_rational.remainder(_DecimalIntl._(other)._rational));
 
   int toInt() => _rational.toBigInt().toInt();
 
   double toDouble() => _rational.toDouble();
 
-  DecimalIntl round() => DecimalIntl._(_rational.round());
+  _DecimalIntl round() => _DecimalIntl._(_rational.round());
 
   @override
-  bool operator ==(Object other) => _rational == DecimalIntl._(other)._rational;
+  bool operator ==(Object other) =>
+      _rational == _DecimalIntl._(other)._rational;
 
   @override
   int get hashCode => _rational.hashCode;
 
   @override
   String toString() => _rational.toString();
+}
+
+class _DartDecimalNumberParser extends NumberParserBase<Decimal?> {
+  _DartDecimalNumberParser(super.format, super.text);
+
+  @override
+  Decimal? fromNormalized(String normalizedText) =>
+      Decimal.tryParse(normalizedText);
+
+  @override
+  Decimal? nan() => null;
+
+  @override
+  Decimal? negativeInfinity() => null;
+
+  @override
+  Decimal? positiveInfinity() => null;
+
+  @override
+  Decimal? scaled(Decimal? parsed, int scale) => parsed != null
+      ? (parsed / Decimal.fromInt(scale))
+          .toDecimal(scaleOnInfinitePrecision: scale)
+      : null;
 }
