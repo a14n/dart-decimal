@@ -1,3 +1,8 @@
+# 3.0.0 (2024-06-02)
+
+- Add `DecimalFormatter` to deal with [intl](https://pub.dev/packages/intl) package. Your can now parse and format decimals.
+- Add a dependency to intl.
+
 # 2.3.3 (2023-07-08)
 
 - [Introduce logical operators to DecimalIntl to support intl 0.18.0](https://github.com/a14n/dart-decimal/pull/98)
