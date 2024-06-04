@@ -109,25 +109,25 @@ class _DecimalIntl {
   String toString() => _rational.toString();
 }
 
-class _DartDecimalNumberParser extends NumberParserBase<Decimal?> {
+class _DartDecimalNumberParser extends NumberParserBase<Decimal> {
   _DartDecimalNumberParser(super.format, super.text);
 
   @override
-  Decimal? fromNormalized(String normalizedText) =>
-      Decimal.tryParse(normalizedText);
+  Decimal fromNormalized(String normalizedText) =>
+      Decimal.parse(normalizedText);
 
   @override
-  Decimal? nan() => null;
+  Decimal nan() => throw FormatException('Could not parse Decimal');
 
   @override
-  Decimal? negativeInfinity() => null;
+  Decimal negativeInfinity() =>
+      throw FormatException('Could not parse Decimal');
 
   @override
-  Decimal? positiveInfinity() => null;
+  Decimal positiveInfinity() =>
+      throw FormatException('Could not parse Decimal');
 
   @override
-  Decimal? scaled(Decimal? parsed, int scale) => parsed != null
-      ? (parsed / Decimal.fromInt(scale))
-          .toDecimal(scaleOnInfinitePrecision: scale)
-      : null;
+  Decimal scaled(Decimal parsed, int scale) => (parsed / Decimal.fromInt(scale))
+      .toDecimal(scaleOnInfinitePrecision: scale);
 }

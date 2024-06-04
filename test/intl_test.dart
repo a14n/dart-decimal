@@ -84,17 +84,25 @@ void main() {
     });
   });
   group('DecimalFormatter.parse', () {
-    group('DecimalFormatter.parse', () {
-      test('can parse plain decimal', () {
-        final plainFormatter = DecimalFormatter(NumberFormat());
-        expectThat(plainFormatter.parse('3.14')).equals(dec('3.14'));
-        expectThat(plainFormatter.parse('03.14')).equals(dec('3.14'));
-        expectThat(plainFormatter.parse('-3.14')).equals(-dec('3.14'));
-        expectThat(plainFormatter.tryParse('3.14')).equals(dec('3.14'));
-        expectThat(plainFormatter.tryParse('03.14')).equals(dec('3.14'));
-        expectThat(plainFormatter.tryParse('-3.14')).equals(-dec('3.14'));
-        expectThat(plainFormatter.tryParse('qsfd')).isNull;
-      });
+    test('handle invalid Decimal', () {
+      final plainFormatter = DecimalFormatter(NumberFormat());
+      expectThat(() => plainFormatter.parse('NaN')).throwsA<FormatException>();
+      expectThat(plainFormatter.tryParse('NaN')).isNull;
+      expectThat(() => plainFormatter.parse('a')).throwsA<FormatException>();
+      expectThat(plainFormatter.tryParse('a')).isNull;
+      expectThat(() => plainFormatter.parse('+Infinity'))
+          .throwsA<FormatException>();
+      expectThat(plainFormatter.tryParse('+Infinity')).isNull;
+    });
+    test('can parse plain decimal', () {
+      final plainFormatter = DecimalFormatter(NumberFormat());
+      expectThat(plainFormatter.parse('3.14')).equals(dec('3.14'));
+      expectThat(plainFormatter.parse('03.14')).equals(dec('3.14'));
+      expectThat(plainFormatter.parse('-3.14')).equals(-dec('3.14'));
+      expectThat(plainFormatter.tryParse('3.14')).equals(dec('3.14'));
+      expectThat(plainFormatter.tryParse('03.14')).equals(dec('3.14'));
+      expectThat(plainFormatter.tryParse('-3.14')).equals(-dec('3.14'));
+      expectThat(plainFormatter.tryParse('qsfd')).isNull;
     });
 
     test('can parse currency decimal', () {
