@@ -1,3 +1,7 @@
+# 3.0.1 (2024-06-04)
+
+- Throw `FormatException` on `formatter.parse('NaN')`.
+
 # 3.0.0 (2024-06-02)
 
 - Add `DecimalFormatter` to deal with [intl](https://pub.dev/packages/intl) package. Your can now parse and format decimals.
