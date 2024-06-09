@@ -82,6 +82,14 @@ void main() {
       final formatter = DecimalFormatter(format);
       expectThat(formatter.format(dec('1000000000'))).equals('1B');
     });
+
+    test('with currencyFormatter', () {
+      final currencyFormatter = DecimalFormatter(NumberFormat.compact());
+      expectThat(currencyFormatter.format(dec('1000'))).equals('1K');
+      expectThat(currencyFormatter.format(dec('1000.1'))).equals('1K');
+      expectThat(currencyFormatter.format(dec('1234567890.1234')))
+          .equals('1.23B');
+    });
   });
   group('DecimalFormatter.parse', () {
     test('handle invalid Decimal', () {

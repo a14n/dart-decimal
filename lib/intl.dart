@@ -76,8 +76,8 @@ class _DecimalIntl {
   _DecimalIntl operator *(dynamic other) =>
       _DecimalIntl._(_rational * _DecimalIntl._(other)._rational);
 
-  _DecimalIntl operator /(dynamic other) =>
-      _DecimalIntl._(_rational / _DecimalIntl._(other)._rational);
+  num operator /(dynamic other) =>
+      (_rational / _DecimalIntl._(other)._rational).toDouble();
 
   bool operator <(dynamic other) => _rational < _DecimalIntl._(other)._rational;
 
