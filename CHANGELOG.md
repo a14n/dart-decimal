@@ -1,3 +1,7 @@
+# 3.0.2 (2024-06-09)
+
+- Fix #107: avoid exception when formatting decimal with `NumberFormat.compact()`.
+
 # 3.0.1 (2024-06-04)
 
 - Throw `FormatException` on `formatter.parse('NaN')`.
