@@ -1,3 +1,7 @@
+# 3.1.0 (2024-11-21)
+- Bump `intl` to 0.20.0, `lints` to 5.0.0
+- Bump SDK to 3.3.0 (enables wasm)
+
 # 3.0.2 (2024-06-09)
 
 - Fix #107: avoid exception when formatting decimal with `NumberFormat.compact()`.
