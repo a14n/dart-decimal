@@ -1,4 +1,5 @@
-# 3.1.0 (2024-11-21)
+# 3.1.0 (2024-11-22)
+
 - Bump `intl` to 0.20.0, `lints` to 5.0.0
 - Bump SDK to 3.3.0 (enables wasm)
 
