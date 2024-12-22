@@ -169,9 +169,9 @@ void main() {
     expectThat(dec('1.498').abs()).equals(dec('1.498'));
   });
   test('signum', () {
-    expectThat(dec('-1.49').signum).equals(-1);
-    expectThat(dec('1.49').signum).equals(1);
-    expectThat(dec('0').signum).equals(0);
+    expectThat(dec('-1.49').sign).equals(-1);
+    expectThat(dec('1.49').sign).equals(1);
+    expectThat(dec('0').sign).equals(0);
   });
   group('floor()', () {
     test('without scale', () {

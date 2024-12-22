@@ -18,16 +18,16 @@ final _i0 = BigInt.zero;
 final _i1 = BigInt.one;
 final _i2 = BigInt.two;
 final _i5 = BigInt.from(5);
+final _i10 = BigInt.from(10);
 final _r10 = Rational.fromInt(10);
 
 /// A number that can be exactly written with a finite number of digits in the
 /// decimal system.
 class Decimal implements Comparable<Decimal> {
-  /// Create a new decimal from its rational value.
-  Decimal._(this._rational) : assert(_rational.hasFinitePrecision);
+  Decimal._(this._value, this._scale);
 
   /// Create a new [Decimal] from a [BigInt].
-  factory Decimal.fromBigInt(BigInt value) => value.toRational().toDecimal();
+  factory Decimal.fromBigInt(BigInt value) => Decimal._(value, 0);
 
   /// Create a new [Decimal] from an [int].
   factory Decimal.fromInt(int value) => Decimal.fromBigInt(BigInt.from(value));
@@ -35,10 +35,30 @@ class Decimal implements Comparable<Decimal> {
   /// Create a new [Decimal] from its [String] representation.
   factory Decimal.fromJson(String value) => Decimal.parse(value);
 
-  final Rational _rational;
+  final BigInt _value;
+  final int _scale;
+  late final Rational _rational = _scale > 0
+      ? Rational(_value, _i10.pow(_scale))
+      : Rational(_value * _i10.pow(_scale.abs()));
+
+  static final _pattern =
+      RegExp(r'^([+-]?\d*)(?:\.(\d*))?(?:[eE]([+-]?\d+))?$');
 
   /// Parses [source] as a decimal literal and returns its value as [Decimal].
-  static Decimal parse(String source) => Rational.parse(source).toDecimal();
+  static Decimal parse(String source) {
+    final match = _pattern.firstMatch(source);
+    if (match == null) {
+      throw FormatException('$source is not a valid format');
+    }
+    final group1 = match.group(1);
+    final group2 = match.group(2) ?? '';
+    final group3 = match.group(3);
+
+    var value = BigInt.parse('$group1$group2');
+    var scale = group3 == null ? 0 : -int.parse(group3);
+    scale += group2.length;
+    return Decimal._(value, scale);
+  }
 
   /// Parses [source] as a decimal literal and returns its value as [Decimal], or null if the parsing fails.
   static Decimal? tryParse(String source) {
@@ -62,7 +82,7 @@ class Decimal implements Comparable<Decimal> {
   Rational toRational() => _rational;
 
   /// Returns `true` if `this` is an integer.
-  bool get isInteger => _rational.isInteger;
+  bool get isInteger => _scale <= 0 || _rational.isInteger;
 
   /// Returns a [Rational] corresponding to `1/this`.
   Rational get inverse => _rational.inverse;
@@ -77,13 +97,16 @@ class Decimal implements Comparable<Decimal> {
   /// Returns a [String] representation of `this`.
   @override
   String toString() {
-    if (_rational.isInteger) return _rational.toString();
-    var value = toStringAsFixed(scale);
-    while (
-        value.contains('.') && (value.endsWith('0') || value.endsWith('.'))) {
-      value = value.substring(0, value.length - 1);
+    var v = _value.abs().toString();
+    if (_scale <= 0) {
+      v = v + '0' * -_scale;
+    } else if (v.length <= scale) {
+      v = '0.${'0' * (scale - v.length)}${v.substring(v.length - scale)}';
+    } else {
+      v = '${v.substring(0, v.length - scale)}.${v.substring(v.length - scale)}';
     }
-    return value;
+    if (_value.isNegative) v = '-$v';
+    return v;
   }
 
   /// Converts `this` to [String] by using [toString].
@@ -93,16 +116,25 @@ class Decimal implements Comparable<Decimal> {
   int compareTo(Decimal other) => _rational.compareTo(other._rational);
 
   /// Addition operator.
-  Decimal operator +(Decimal other) =>
-      (_rational + other._rational).toDecimal();
+  Decimal operator +(Decimal other) {
+    if (_scale == other._scale) {
+      return Decimal._(_value + other._value, _scale);
+    }
+    if (_scale < other._scale) {
+      return Decimal._(
+        _value * _i10.pow(other._scale - _scale) + other._value,
+        other._scale,
+      );
+    }
+    return other + this;
+  }
 
   /// Subtraction operator.
-  Decimal operator -(Decimal other) =>
-      (_rational - other._rational).toDecimal();
+  Decimal operator -(Decimal other) => this + (-other);
 
   /// Multiplication operator.
   Decimal operator *(Decimal other) =>
-      (_rational * other._rational).toDecimal();
+      Decimal._(_value * other._value, _scale + other._scale);
 
   /// Euclidean modulo operator.
   ///
@@ -119,7 +151,7 @@ class Decimal implements Comparable<Decimal> {
   BigInt operator ~/(Decimal other) => _rational ~/ other._rational;
 
   /// Returns the negative value of this rational.
-  Decimal operator -() => (-_rational).toDecimal();
+  Decimal operator -() => Decimal._(-_value, _scale);
 
   /// Return the remainder from dividing this [Decimal] by [other].
   Decimal remainder(Decimal other) =>
@@ -138,14 +170,17 @@ class Decimal implements Comparable<Decimal> {
   bool operator >=(Decimal other) => _rational >= other._rational;
 
   /// Returns the absolute value of `this`.
-  Decimal abs() => _rational.abs().toDecimal();
+  Decimal abs() => Decimal._(_value.abs(), _scale);
 
   /// The signum function value of `this`.
   ///
   /// E.e. -1, 0 or 1 as the value of this [Decimal] is negative, zero or positive.
-  int get signum => _rational.signum;
+  int get sign => _value.sign;
 
-  /// Returns the greatest [Decimal] value no greater than this [Rational].
+  @Deprecated('Use .sign')
+  int get signum => _value.sign;
+
+  /// Returns the greatest [Decimal] value no greater than this [Decimal].
   ///
   /// An optional [scale] value can be provided as parameter to indicate the
   /// digit used as reference for the operation.
@@ -159,7 +194,7 @@ class Decimal implements Comparable<Decimal> {
   /// ```
   Decimal floor({int scale = 0}) => _scaleAndApply(scale, (e) => e.floor());
 
-  /// Returns the least [Decimal] value that is no smaller than this [Rational].
+  /// Returns the least [Decimal] value that is no smaller than this [Decimal].
   ///
   /// An optional [scale] value can be provided as parameter to indicate the
   /// digit used as reference for the operation.
@@ -207,7 +242,7 @@ class Decimal implements Comparable<Decimal> {
   /// x.shift(1); // 1234.567
   /// x.shift(-1); // 12.34567
   /// ```
-  Decimal shift(int value) => this * ten.pow(value).toDecimal();
+  Decimal shift(int value) => Decimal._(_value, _scale - value);
 
   /// Clamps `this` to be in the range [lowerLimit]-[upperLimit].
   Decimal clamp(Decimal lowerLimit, Decimal upperLimit) =>
@@ -246,15 +281,7 @@ class Decimal implements Comparable<Decimal> {
   /// Decimal.parse('1.5').scale; // => 1
   /// Decimal.parse('1').scale; // => 0
   /// ```
-  int get scale {
-    var i = 0;
-    var x = _rational;
-    while (!x.isInteger) {
-      i++;
-      x *= _r10;
-    }
-    return i;
-  }
+  int get scale => _rational._scale;
 
   /// A decimal-point string-representation of this number with [fractionDigits]
   /// digits after the decimal point.
@@ -351,12 +378,17 @@ extension RationalExt on Rational {
     int? scaleOnInfinitePrecision,
     BigInt Function(Rational)? toBigInt,
   }) {
-    if (scaleOnInfinitePrecision == null || hasFinitePrecision) {
-      return Decimal._(this);
+    if (hasFinitePrecision) {
+      var scale = _scale;
+      return Decimal._((this * Rational(_i10.pow(scale))).toBigInt(), scale);
+    }
+    if (scaleOnInfinitePrecision == null) {
+      throw AssertionError(
+          'scaleOnInfinitePrecision is required for rationale without finite precision');
     }
     final scaleFactor = _r10.pow(scaleOnInfinitePrecision);
     toBigInt ??= (value) => value.truncate();
-    return Decimal._(toBigInt(this * scaleFactor).toRational() / scaleFactor);
+    return Decimal._(toBigInt(this * scaleFactor), scaleOnInfinitePrecision);
   }
 
   /// Returns `true` if this [Rational] has a finite precision.
@@ -373,6 +405,24 @@ extension RationalExt on Rational {
       den = den ~/ _i2;
     }
     return den == _i1;
+  }
+
+  /// The scale of this [Rational].
+  ///
+  /// The scale is the number of digits after the decimal point.
+  ///
+  /// ```dart
+  /// Decimal.parse('1.5').scale; // => 1
+  /// Decimal.parse('1').scale; // => 0
+  /// ```
+  int get _scale {
+    var i = 0;
+    var x = this;
+    while (!x.isInteger) {
+      i++;
+      x *= _r10;
+    }
+    return i;
   }
 }
 
