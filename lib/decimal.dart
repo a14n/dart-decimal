@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dart:math';
+
 import 'package:rational/rational.dart';
 
 final _i0 = BigInt.zero;
@@ -82,28 +84,29 @@ class Decimal implements Comparable<Decimal> {
   Rational toRational() => _rational;
 
   /// Returns `true` if `this` is an integer.
-  bool get isInteger => _scale <= 0 || _rational.isInteger;
+  bool get isInteger => _scale <= 0 || _rescaled._scale <= 0;
 
   /// Returns a [Rational] corresponding to `1/this`.
   Rational get inverse => _rational.inverse;
 
   @override
-  bool operator ==(Object other) =>
-      other is Decimal && _rational == other._rational;
+  bool operator ==(Object other) => other is Decimal && compareTo(other) == 0;
 
   @override
-  int get hashCode => _rational.hashCode;
+  int get hashCode => Object.hash(_rescaled._value, _rescaled._scale);
 
   /// Returns a [String] representation of `this`.
   @override
   String toString() {
-    var v = _value.abs().toString();
-    if (_scale <= 0) {
-      v = v + '0' * -_scale;
-    } else if (v.length <= scale) {
-      v = '0.${'0' * (scale - v.length)}${v.substring(v.length - scale)}';
+    var d = _rescaled;
+    var v = d._value.abs().toString();
+    var s = d._scale;
+    if (s <= 0) {
+      v = v + '0' * -s;
+    } else if (v.length <= s) {
+      v = '0.${'0' * (s - v.length)}${v.substring(v.length - s)}';
     } else {
-      v = '${v.substring(0, v.length - scale)}.${v.substring(v.length - scale)}';
+      v = '${v.substring(0, v.length - s)}.${v.substring(v.length - s)}';
     }
     if (_value.isNegative) v = '-$v';
     return v;
@@ -113,20 +116,15 @@ class Decimal implements Comparable<Decimal> {
   String toJson() => toString();
 
   @override
-  int compareTo(Decimal other) => _rational.compareTo(other._rational);
+  int compareTo(Decimal other) {
+    var (d1, d2) = _unifyScale(this, other);
+    return d1._value.compareTo(d2._value);
+  }
 
   /// Addition operator.
   Decimal operator +(Decimal other) {
-    if (_scale == other._scale) {
-      return Decimal._(_value + other._value, _scale);
-    }
-    if (_scale < other._scale) {
-      return Decimal._(
-        _value * _i10.pow(other._scale - _scale) + other._value,
-        other._scale,
-      );
-    }
-    return other + this;
+    var (d1, d2) = _unifyScale(this, other);
+    return Decimal._(d1._value + d2._value, d1._scale);
   }
 
   /// Subtraction operator.
@@ -139,8 +137,10 @@ class Decimal implements Comparable<Decimal> {
   /// Euclidean modulo operator.
   ///
   /// See [num.operator%].
-  Decimal operator %(Decimal other) =>
-      (_rational % other._rational).toDecimal();
+  Decimal operator %(Decimal other) {
+    var (d1, d2) = _unifyScale(this, other);
+    return Decimal._(d1._value % d2._value, d1._scale);
+  }
 
   /// Division operator.
   Rational operator /(Decimal other) => _rational / other._rational;
@@ -148,26 +148,31 @@ class Decimal implements Comparable<Decimal> {
   /// Truncating division operator.
   ///
   /// See [num.operator~/].
-  BigInt operator ~/(Decimal other) => _rational ~/ other._rational;
+  BigInt operator ~/(Decimal other) {
+    var (d1, d2) = _unifyScale(this, other);
+    return d1._value ~/ d2._value;
+  }
 
   /// Returns the negative value of this rational.
   Decimal operator -() => Decimal._(-_value, _scale);
 
   /// Return the remainder from dividing this [Decimal] by [other].
-  Decimal remainder(Decimal other) =>
-      (_rational.remainder(other._rational)).toDecimal();
+  Decimal remainder(Decimal other) {
+    var (d1, d2) = _unifyScale(this, other);
+    return Decimal._(d1._value.remainder(d2._value), d1._scale);
+  }
 
   /// Whether this number is numerically smaller than [other].
-  bool operator <(Decimal other) => _rational < other._rational;
+  bool operator <(Decimal other) => compareTo(other) < 0;
 
   /// Whether this number is numerically smaller than or equal to [other].
-  bool operator <=(Decimal other) => _rational <= other._rational;
+  bool operator <=(Decimal other) => compareTo(other) <= 0;
 
   /// Whether this number is numerically greater than [other].
-  bool operator >(Decimal other) => _rational > other._rational;
+  bool operator >(Decimal other) => compareTo(other) > 0;
 
   /// Whether this number is numerically greater than or equal to [other].
-  bool operator >=(Decimal other) => _rational >= other._rational;
+  bool operator >=(Decimal other) => compareTo(other) >= 0;
 
   /// Returns the absolute value of `this`.
   Decimal abs() => Decimal._(_value.abs(), _scale);
@@ -245,18 +250,29 @@ class Decimal implements Comparable<Decimal> {
   Decimal shift(int value) => Decimal._(_value, _scale - value);
 
   /// Clamps `this` to be in the range [lowerLimit]-[upperLimit].
-  Decimal clamp(Decimal lowerLimit, Decimal upperLimit) =>
-      _rational.clamp(lowerLimit._rational, upperLimit._rational).toDecimal();
+  Decimal clamp(Decimal lowerLimit, Decimal upperLimit) => this < lowerLimit
+      ? lowerLimit
+      : this > upperLimit
+          ? upperLimit
+          : this;
 
   /// The [BigInt] obtained by discarding any fractional digits from `this`.
-  BigInt toBigInt() => _rational.toBigInt();
+  BigInt toBigInt() => switch (this) {
+        var d when d._scale > 0 => d._value ~/ _i10.pow(d._scale),
+        var d when d._scale < 0 => d._value * _i10.pow(-d._scale),
+        var d => d._value,
+      };
 
   /// Returns `this` as a [double].
   ///
   /// If the number is not representable as a [double], an approximation is
   /// returned. For numerically large integers, the approximation may be
   /// infinite.
-  double toDouble() => _rational.toDouble();
+  double toDouble() => switch (this) {
+        var d when d._scale > 0 => d._value / _i10.pow(d._scale),
+        var d when d._scale < 0 => (d._value * _i10.pow(-d._scale)).toDouble(),
+        var d => d._value.toDouble(),
+      };
 
   /// The precision of this [Decimal].
   ///
@@ -281,7 +297,7 @@ class Decimal implements Comparable<Decimal> {
   /// Decimal.parse('1.5').scale; // => 1
   /// Decimal.parse('1').scale; // => 0
   /// ```
-  int get scale => _rational._scale;
+  int get scale => _scale <= 0 ? 0 : max(_rescaled._scale, 0);
 
   /// A decimal-point string-representation of this number with [fractionDigits]
   /// digits after the decimal point.
@@ -361,6 +377,29 @@ class Decimal implements Comparable<Decimal> {
   ///
   /// Returns [Rational.one] if the [exponent] equals `0`.
   Rational pow(int exponent) => _rational.pow(exponent);
+
+  static (Decimal, Decimal) _unifyScale(Decimal d1, Decimal d2) {
+    var s1 = d1._scale;
+    var s2 = d2._scale;
+    return switch (null) {
+      _ when s1 > s2 => (d1, Decimal._(d2._value * _i10.pow(s1 - s2), s1)),
+      _ when s1 < s2 => (Decimal._(d1._value * _i10.pow(s2 - s1), s2), d2),
+      _ => (d1, d2),
+    };
+  }
+
+  late final Decimal _rescaled = () {
+    if (this == Decimal.zero) return this;
+    var d = this;
+    while (true) {
+      if (d._value % _i10 == _i0) {
+        d = Decimal._(d._value ~/ _i10, d._scale - 1);
+      } else {
+        break;
+      }
+    }
+    return d;
+  }();
 }
 
 /// Extensions on [Rational].

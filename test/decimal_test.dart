@@ -39,6 +39,8 @@ void main() {
     expectThat(dec('-1.0').isInteger).isTrue;
     expectThat(dec('1.2').isInteger).isFalse;
     expectThat(dec('-1.21').isInteger).isFalse;
+    expectThat(dec('1.00000').isInteger).isTrue;
+    expectThat(dec('-1.00000').isInteger).isTrue;
   });
   test('get inverse', () {
     expectThat(dec('1').inverse).equals(dec('1').toRational());
@@ -65,6 +67,7 @@ void main() {
     ]) {
       expectThat(dec(n).toString()).equals(n);
     }
+    expectThat(dec('1.000').toString()).equals('1');
     expectThat((dec('1') / dec('3')).toString()).equals('1/3');
     expectThat(dec('9.9').toString()).equals('9.9');
     expectThat((dec('1.0000000000000000000000000000000000000000000000001') *
@@ -110,6 +113,8 @@ void main() {
     expectThat(dec('8.9') % dec('1.1')).equals(dec('0.1'));
     expectThat(dec('-1.2') % dec('0.5')).equals(dec('0.3'));
     expectThat(dec('-1.2') % dec('-0.5')).equals(dec('0.3'));
+    expectThat(dec('1e1') % dec('0.3')).equals(dec('0.1'));
+    expectThat(dec('0.3') % dec('1e1')).equals(dec('0.3'));
   });
   test('operator /(Decimal other)', () async {
     await expectThat(() => dec('1') / dec('0')).throws;
