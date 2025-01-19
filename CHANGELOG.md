@@ -1,3 +1,7 @@
+# 3.2.0 (2025-01-19)
+
+- Improve performances
+
 # 3.1.0 (2024-11-22)
 
 - Bump `intl` to 0.20.0, `lints` to 5.0.0
