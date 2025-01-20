@@ -104,7 +104,7 @@ class Decimal implements Comparable<Decimal> {
     if (s <= 0) {
       v = v + '0' * -s;
     } else if (v.length <= s) {
-      v = '0.${'0' * (s - v.length)}${v.substring(v.length - s)}';
+      v = '0.${'0' * (s - v.length)}$v';
     } else {
       v = '${v.substring(0, v.length - s)}.${v.substring(v.length - s)}';
     }
