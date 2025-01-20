@@ -1,3 +1,7 @@
+# 3.2.1 (2025-01-20)
+
+- [fix: toString() method for values < 0.1](https://github.com/a14n/dart-decimal/pull/111)
+
 # 3.2.0 (2025-01-19)
 
 - Improve performances
