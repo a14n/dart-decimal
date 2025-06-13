@@ -72,13 +72,13 @@ class Decimal implements Comparable<Decimal> {
   }
 
   /// The [Decimal] corresponding to `0`.
-  static Decimal zero = Decimal.fromInt(0);
+  static final Decimal zero = Decimal.fromInt(0);
 
   /// The [Decimal] corresponding to `1`.
-  static Decimal one = Decimal.fromInt(1);
+  static final Decimal one = Decimal.fromInt(1);
 
   /// The [Decimal] corresponding to `10`.
-  static Decimal ten = Decimal.fromInt(10);
+  static final Decimal ten = Decimal.fromInt(10);
 
   /// The [Rational] corresponding to `this`.
   Rational toRational() => _rational;
