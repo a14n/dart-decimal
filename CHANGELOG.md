@@ -1,3 +1,9 @@
+# 3.2.2 (2025-06-15)
+
+- loosen `intl` to `>=0.19.0 <0.21.0` to address [Intl version within flutter_localizations makes version 3.2.1 of decimal impossible to use on Flutter v3.29.3](https://github.com/a14n/dart-decimal/issues/113)
+- Bump `lints` to 5.0.0
+- [Make `Decimal.zero`, `Decimal.one`, and  `Decimal.ten` final](https://github.com/a14n/dart-decimal/pull/114)
+
 # 3.2.1 (2025-01-20)
 
 - [fix: toString() method for values < 0.1](https://github.com/a14n/dart-decimal/pull/111)
