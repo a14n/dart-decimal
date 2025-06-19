@@ -68,7 +68,11 @@ void main() {
     ]) {
       expectThat(dec(n).toString()).equals(n);
     }
+    expectThat(dec('0.000').toString()).equals('0');
+    expectThat(dec('-0.000').toString()).equals('0');
+    expectThat((dec('1.2') - dec('1.2')).toString()).equals('0');
     expectThat(dec('1.000').toString()).equals('1');
+    expectThat(dec('-1.000').toString()).equals('-1');
     expectThat((dec('1') / dec('3')).toString()).equals('1/3');
     expectThat(dec('9.9').toString()).equals('9.9');
     expectThat((dec('1.0000000000000000000000000000000000000000000000001') *
@@ -295,6 +299,7 @@ void main() {
     expectThat(dec('-100.0000001').precision).equals(10);
     expectThat(dec('100.000000000000000000000000000001').precision).equals(33);
     expectThat(dec('0').precision).equals(1);
+    expectThat(dec('0.00').precision).equals(1);
     expectThat(dec('0.1').precision).equals(2);
     expectThat(dec('0.01').precision).equals(3);
     expectThat(dec('-0.01').precision).equals(3);
