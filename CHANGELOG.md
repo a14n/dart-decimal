@@ -1,3 +1,7 @@
+# 3.2.3 (2025-06-19)
+
+- Fix bad scale value by parsing `0.0` (see [Issue with Decimal.tryParse return value formatting](https://github.com/a14n/dart-decimal/issues/115))
+
 # 3.2.2 (2025-06-15)
 
 - loosen `intl` to `>=0.19.0 <0.21.0` to address [Intl version within flutter_localizations makes version 3.2.1 of decimal impossible to use on Flutter v3.29.3](https://github.com/a14n/dart-decimal/issues/113)
