@@ -466,13 +466,13 @@ extension RationalExt on Rational {
 }
 
 /// Extensions on [BigInt].
-extension BigIntExt on BigInt {
+extension DecimalBigIntExt on BigInt {
   /// This [BigInt] as a [Decimal].
   Decimal toDecimal() => Decimal.fromBigInt(this);
 }
 
 /// Extensions on [int].
-extension IntExt on int {
+extension DecimalIntExt on int {
   /// This [int] as a [Decimal].
   Decimal toDecimal() => Decimal.fromInt(this);
 }
