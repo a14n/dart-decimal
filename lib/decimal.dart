@@ -26,11 +26,7 @@ final _r10 = Rational.fromInt(10);
 /// A number that can be exactly written with a finite number of digits in the
 /// decimal system.
 class Decimal implements Comparable<Decimal> {
-  Decimal.__(this._value, this._scale);
-
-  factory Decimal._(BigInt value, int scale) => value == BigInt.zero
-      ? Decimal.__(BigInt.zero, 0)
-      : Decimal.__(value, scale);
+  Decimal._(this._value, this._scale);
 
   /// Create a new [Decimal] from a [BigInt].
   factory Decimal.fromBigInt(BigInt value) => Decimal._(value, 0);
@@ -393,7 +389,7 @@ class Decimal implements Comparable<Decimal> {
   }
 
   late final Decimal _rescaled = () {
-    if (this == Decimal.zero) return this;
+    if (this == Decimal.zero) return Decimal.zero;
     var d = this;
     while (true) {
       if (d._value % _i10 == _i0) {

@@ -95,6 +95,12 @@ void main() {
     expectThat(dec('31878018903828899277492024491376690701584023926880.0') +
             dec('0.9'))
         .equals(dec('31878018903828899277492024491376690701584023926880.9'));
+    expectThat(dec('0.000325') + dec('0')).equals(dec('0.000325'));
+    expectThat(dec('0') + dec('0.000325')).equals(dec('0.000325'));
+    expectThat(dec('0.000325') + Decimal.zero).equals(dec('0.000325'));
+    expectThat(Decimal.zero + dec('0.000325')).equals(dec('0.000325'));
+    expectThat(dec('0.000325') + dec('0.0000000000')).equals(dec('0.000325'));
+    expectThat(dec('0.0000000000') + dec('0.000325')).equals(dec('0.000325'));
   });
   test('operator -(Decimal other)', () {
     expectThat(dec('1') - dec('1')).equals(dec('0'));
@@ -299,6 +305,7 @@ void main() {
     expectThat(dec('-100.0000001').precision).equals(10);
     expectThat(dec('100.000000000000000000000000000001').precision).equals(33);
     expectThat(dec('0').precision).equals(1);
+    expectThat(dec('0.10').precision).equals(2);
     expectThat(dec('0.00').precision).equals(1);
     expectThat(dec('0.1').precision).equals(2);
     expectThat(dec('0.01').precision).equals(3);
@@ -320,6 +327,7 @@ void main() {
             .equals(n.toStringAsFixed(p));
       }
     }
+    expectThat(dec('19').toStringAsFixed(5)).equals('19.00000');
   });
   test('toStringAsExponential(int fractionDigits)', () {
     expectThat(dec('0').toStringAsExponential(0)).equals('0e+0');
