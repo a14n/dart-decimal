@@ -1,3 +1,7 @@
+# 3.2.4 (2025-06-22)
+
+- Fix issue with scale of zero causing problem in addition/substraction with zero.
+
 # 3.2.3 (2025-06-19)
 
 - Fix bad scale value by parsing `0.0` (see [Issue with Decimal.tryParse return value formatting](https://github.com/a14n/dart-decimal/issues/115))
