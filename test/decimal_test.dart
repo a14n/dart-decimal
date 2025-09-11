@@ -448,4 +448,39 @@ void main() {
       toBigInt: (v) => v.round(),
     )).equals(dec('0.7'));
   });
+
+  group('Global default scale for infinite precision rationals', () {
+    test('uses Decimal.defaultPrecision when not provided explicitly', () {
+      final previous = Decimal.defaultPrecision;
+      try {
+        Decimal.defaultPrecision = 2;
+        expectThat(Rational.fromInt(1, 3).toDecimal()).equals(dec('0.33'));
+        Decimal.defaultPrecision = 1;
+        expectThat(Rational.fromInt(2, 3).toDecimal()).equals(dec('0.6'));
+      } finally {
+        Decimal.defaultPrecision = previous;
+      }
+    });
+
+    test('rejects negative values', () {
+      final previous = Decimal.defaultPrecision;
+      try {
+        expectThat(() => Decimal.defaultPrecision = -1)
+            .throwsA<ArgumentError>();
+      } finally {
+        Decimal.defaultPrecision = previous;
+      }
+    });
+
+    test('null restores original behavior (throws on infinite precision)', () {
+      final previous = Decimal.defaultPrecision;
+      try {
+        Decimal.defaultPrecision = null;
+        expectThat(() => Rational.fromInt(1, 3).toDecimal())
+            .throwsA<AssertionError>();
+      } finally {
+        Decimal.defaultPrecision = previous;
+      }
+    });
+  });
 }

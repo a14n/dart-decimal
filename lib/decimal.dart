@@ -28,6 +28,44 @@ final _r10 = Rational.fromInt(10);
 class Decimal implements Comparable<Decimal> {
   Decimal._(this._value, this._scale);
 
+  /// Global configuration: default number of fractional digits to use when
+  /// converting a [Rational] without finite precision (e.g. 1/3) to a
+  /// [Decimal] when the scale is not explicitly provided.
+  ///
+  /// If null (the default), calling `Rational.toDecimal()` without providing
+  /// `scaleOnInfinitePrecision` will throw an [AssertionError] for rationals
+  /// without finite precision, preserving the previous behavior.
+  ///
+  /// This default is only consulted by `RationalExt.toDecimal()` when
+  /// `hasFinitePrecision` is false and no explicit `scaleOnInfinitePrecision`
+  /// is provided. All internal uses in this file that convert rationals back
+  /// to decimals operate on powers of 10 (finite precision) and therefore do
+  /// not use this default.
+  static int? _defaultScaleOnInfinitePrecision;
+
+  /// The default number of fractional digits used for infinite-precision
+  /// rationals when converting to [Decimal].
+  static int? get defaultScaleOnInfinitePrecision =>
+      _defaultScaleOnInfinitePrecision;
+
+  /// Sets the default number of fractional digits used for infinite-precision
+  /// rationals when converting to [Decimal].
+  static set defaultScaleOnInfinitePrecision(int? value) {
+    if (value != null && value < 0) {
+      throw ArgumentError.value(
+          value, 'defaultScaleOnInfinitePrecision', 'must be >= 0 or null');
+    }
+    _defaultScaleOnInfinitePrecision = value;
+  }
+
+  /// Alias for [defaultScaleOnInfinitePrecision] with a shorter name that
+  /// avoids collision with the instance getter [precision].
+  static int? get defaultPrecision => _defaultScaleOnInfinitePrecision;
+
+  /// See [defaultPrecision] getter for details.
+  static set defaultPrecision(int? value) =>
+      defaultScaleOnInfinitePrecision = value;
+
   /// Create a new [Decimal] from a [BigInt].
   factory Decimal.fromBigInt(BigInt value) => Decimal._(value, 0);
 
@@ -412,7 +450,13 @@ extension RationalExt on Rational {
   /// to convert `this` to a [Decimal] representation. By default [toBigInt]
   /// use [Rational.truncate] to limit the number of digit.
   ///
-  /// Note that the returned decimal will not be exactly equal to `this`.
+  /// If [hasFinitePrecision] is `false` and [scaleOnInfinitePrecision] is not
+  /// provided, the global [Decimal.defaultScaleOnInfinitePrecision] (or its
+  /// alias [Decimal.defaultPrecision]) will be used when set; otherwise this
+  /// method throws an [AssertionError] to avoid silent precision loss.
+  ///
+  /// Note that the returned decimal will not be exactly equal to `this` when
+  /// a finite scale is used.
   Decimal toDecimal({
     int? scaleOnInfinitePrecision,
     BigInt Function(Rational)? toBigInt,
@@ -421,6 +465,7 @@ extension RationalExt on Rational {
       var scale = _scale;
       return Decimal._((this * Rational(_i10.pow(scale))).toBigInt(), scale);
     }
+    scaleOnInfinitePrecision ??= Decimal.defaultScaleOnInfinitePrecision;
     if (scaleOnInfinitePrecision == null) {
       throw AssertionError(
           'scaleOnInfinitePrecision is required for rationale without finite precision');

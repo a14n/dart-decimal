@@ -1,3 +1,7 @@
+# 3.3.0 (2025-09-11)
+
+- Add `Decimal.defaultPrecision` and `Decimal.defaultScaleOnInfinitePrecision` to set the default precision and scale on infinite precision rationals when converting to `Decimal`.
+
 # 3.2.4 (2025-06-22)
 
 - Fix issue with scale of zero causing problem in addition/substraction with zero.
