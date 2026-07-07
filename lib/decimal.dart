@@ -63,12 +63,24 @@ class Decimal implements Comparable<Decimal> {
   }
 
   /// Parses [source] as a decimal literal and returns its value as [Decimal], or null if the parsing fails.
-  static Decimal? tryParse(String source) {
+  static Decimal? tryParse(dynamic source) {
     try {
-      return Decimal.parse(source);
+      return switch (source) {
+        Decimal value => value,
+        int value => Decimal.fromInt(value),
+        String value => Decimal.parse(value),
+        BigInt value => Decimal.fromBigInt(value),
+        double value => Decimal.parse(value.toString()),
+        _ => null,
+      };
     } on FormatException {
       return null;
     }
+  }
+
+  /// Parses [source] as a decimal literal and returns its value as [Decimal], or [def] if the parsing fails.
+  static Decimal defParse(dynamic source, [Decimal? def]) {
+    return Decimal.tryParse(source) ?? def ?? Decimal.zero;
   }
 
   /// The [Decimal] corresponding to `0`.
