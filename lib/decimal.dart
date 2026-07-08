@@ -370,6 +370,12 @@ class Decimal implements Comparable<Decimal> {
       shift = (shift / ten).toDecimal();
     }
     final value = ((this * shift).round() / shift).toDecimal();
+    // Rounding can carry into a new power of 10 (e.g. `9.99` with precision 2
+    // rounds to `10`). That adds an integer digit, so one fewer fractional
+    // digit is needed to keep exactly [precision] significant digits.
+    if (value.abs() * shift >= limit) {
+      pad--;
+    }
     return pad <= 0 ? value.toString() : value.toStringAsFixed(pad);
   }
 

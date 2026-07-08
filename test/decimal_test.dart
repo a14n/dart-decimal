@@ -368,6 +368,12 @@ void main() {
     expectThat(dec('1.235').toStringAsPrecision(1)).equals('1');
     expectThat(dec('1.235').toStringAsPrecision(5)).equals('1.2350');
     expectThat(dec('1.235').toStringAsPrecision(10)).equals('1.235000000');
+    // Rounding that carries into a new power of 10 must keep exactly
+    // `precision` significant digits (no extra trailing digit).
+    expectThat(dec('9.99').toStringAsPrecision(2)).equals('10');
+    expectThat(dec('9.96').toStringAsPrecision(2)).equals('10');
+    expectThat(dec('999.999').toStringAsPrecision(4)).equals('1000');
+    expectThat(dec('0.9999').toStringAsPrecision(3)).equals('1.00');
   });
   test('issue #13', () {
     expectThat(Decimal.parse('21.962962546543768').toString())
