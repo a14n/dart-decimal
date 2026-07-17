@@ -1,3 +1,7 @@
+# 3.2.5 (2026-07-17)
+
+- Fix toStringAsPrecision emitting an extra digit on power-of-10 carry
+
 # 3.2.4 (2025-06-22)
 
 - Fix issue with scale of zero causing problem in addition/substraction with zero.
