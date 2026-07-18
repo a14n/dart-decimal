@@ -197,7 +197,7 @@ class Decimal implements Comparable<Decimal> {
   /// x.floor(scale: 2); // 123.45
   /// x.floor(scale: -1); // 120
   /// ```
-  Decimal floor({int scale = 0}) => _scaleAndApply(scale, (e) => e.floor());
+  Decimal floor({int scale = 0}) => _roundToScale(scale, _Rounding.floor);
 
   /// Returns the least [Decimal] value that is no smaller than this [Decimal].
   ///
@@ -211,7 +211,7 @@ class Decimal implements Comparable<Decimal> {
   /// x.ceil(scale: 2); // 123.46
   /// x.ceil(scale: -1); // 130
   /// ```
-  Decimal ceil({int scale = 0}) => _scaleAndApply(scale, (e) => e.ceil());
+  Decimal ceil({int scale = 0}) => _roundToScale(scale, _Rounding.ceil);
 
   /// Returns the [Decimal] value closest to this number.
   ///
@@ -228,16 +228,32 @@ class Decimal implements Comparable<Decimal> {
   /// x.round(scale: 2); // 123.46
   /// x.round(scale: -1); // 120
   /// ```
-  Decimal round({int scale = 0}) => _scaleAndApply(scale, (e) => e.round());
+  Decimal round({int scale = 0}) => _roundToScale(scale, _Rounding.halfUp);
 
-  Decimal _scaleAndApply(int scale, BigInt Function(Rational) f) {
-    final scaleFactor = ten.pow(scale);
-    return (f(_rational * scaleFactor).toRational() / scaleFactor).toDecimal();
+  // A [Decimal] is `_value * 10^-_scale`. Rounding to [scale] fractional places
+  // just drops the low `_scale - scale` digits of the significand under the
+  // given rounding [mode], so there is no [Rational] and no gcd on this path.
+  Decimal _roundToScale(int scale, _Rounding mode) {
+    if (scale >= _scale) return this;
+    final divisor = _i10.pow(_scale - scale);
+    var q = _value ~/ divisor;
+    final r = _value.remainder(divisor);
+    if (r != BigInt.zero) {
+      final negative = _value.isNegative;
+      if (mode == _Rounding.floor) {
+        if (negative) q -= _i1;
+      } else if (mode == _Rounding.ceil) {
+        if (!negative) q += _i1;
+      } else if (mode == _Rounding.halfUp) {
+        if (r.abs() * _i2 >= divisor) q += negative ? -_i1 : _i1;
+      }
+      // _Rounding.truncate: q is already truncated toward zero.
+    }
+    return Decimal._(q, scale);
   }
 
   /// The [BigInt] obtained by discarding any fractional digits from `this`.
-  Decimal truncate({int scale = 0}) =>
-      _scaleAndApply(scale, (e) => e.truncate());
+  Decimal truncate({int scale = 0}) => _roundToScale(scale, _Rounding.truncate);
 
   /// Shift the decimal point on the right for positive [value] or on the left
   /// for negative one.
@@ -482,3 +498,6 @@ extension IntExt on int {
   /// This [int] as a [Decimal].
   Decimal toDecimal() => Decimal.fromInt(this);
 }
+
+/// Rounding rule applied when dropping significand digits.
+enum _Rounding { truncate, floor, ceil, halfUp }
