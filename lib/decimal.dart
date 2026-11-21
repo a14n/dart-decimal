@@ -281,14 +281,12 @@ class Decimal implements Comparable<Decimal> {
 
   /// Returns `this` as a [double].
   ///
-  /// If the number is not representable as a [double], an approximation is
-  /// returned. For numerically large integers, the approximation may be
-  /// infinite.
-  double toDouble() => switch (this) {
-        var d when d._scale > 0 => d._value / _i10.pow(d._scale),
-        var d when d._scale < 0 => (d._value * _i10.pow(-d._scale)).toDouble(),
-        var d => d._value.toDouble(),
-      };
+  /// The result is the [double] nearest to `this`. If the number is not
+  /// representable as a [double], an approximation is returned. For
+  /// numerically large integers, the approximation may be infinite.
+  // Dividing two BigInts converts both to double first, which rounds twice
+  // (and gives NaN once 10^scale overflows), so parse the exact digits instead.
+  double toDouble() => double.parse(toString());
 
   /// The precision of this [Decimal].
   ///

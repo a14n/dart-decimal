@@ -293,6 +293,18 @@ void main() {
     expectThat(dec('2.51').toDouble()).equals(2.51);
     expectThat(dec('-2.51').toDouble()).equals(-2.51);
     expectThat(dec('-2').toDouble()).equals(-2.0);
+    expectThat(dec('0.9360953686036907').toDouble()).equals(0.9360953686036907);
+    expectThat(dec('-9.593198765472279').toDouble()).equals(-9.593198765472279);
+    expectThat(dec('44368038.79009343242834').toDouble())
+        .equals(44368038.79009343);
+    expectThat(dec('1.${'0' * 400}').toDouble()).equals(1.0);
+    expectThat(dec('0.${'0' * 400}1').toDouble()).equals(0.0);
+    expectThat(dec('1e400').toDouble()).equals(double.infinity);
+    expectThat(dec('-1e400').toDouble()).equals(double.negativeInfinity);
+    expectThat((dec('1') / dec('3'))
+            .toDecimal(scaleOnInfinitePrecision: 400)
+            .toDouble())
+        .equals(1 / 3);
   });
   test('precision', () {
     expectThat(dec('100').precision).equals(3);
