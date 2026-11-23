@@ -22,6 +22,10 @@ final _i2 = BigInt.two;
 final _i5 = BigInt.from(5);
 final _i10 = BigInt.from(10);
 final _r10 = Rational.fromInt(10);
+const _p10 = [
+  1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, //
+  1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22,
+];
 
 /// A number that can be exactly written with a finite number of digits in the
 /// decimal system.
@@ -281,14 +285,23 @@ class Decimal implements Comparable<Decimal> {
 
   /// Returns `this` as a [double].
   ///
-  /// If the number is not representable as a [double], an approximation is
-  /// returned. For numerically large integers, the approximation may be
-  /// infinite.
-  double toDouble() => switch (this) {
-        var d when d._scale > 0 => d._value / _i10.pow(d._scale),
-        var d when d._scale < 0 => (d._value * _i10.pow(-d._scale)).toDouble(),
-        var d => d._value.toDouble(),
-      };
+  /// The result is the [double] nearest to `this`. If the number is not
+  /// representable as a [double], an approximation is returned. For
+  /// numerically large integers, the approximation may be infinite.
+  double toDouble() {
+    // Fast path: when |_value| <= 2^53 and |_scale| <= 22 both operands are
+    // exact doubles, so a single IEEE division/multiplication is correctly
+    // rounded.
+    if (_value.bitLength <= 53) {
+      if (_scale >= 0 && _scale <= 22) return _value.toDouble() / _p10[_scale];
+      if (_scale < 0 && _scale >= -22) return _value.toDouble() * _p10[-_scale];
+    }
+    // Otherwise let the platform parser round the exact digits once. Using
+    // exponent notation avoids the cost of toString() (rescaling, padding).
+    // BigInt.toString() is much slower than int.toString() on the VM.
+    final digits = _value.isValidInt ? _value.toInt().toString() : '$_value';
+    return double.parse('${digits}e${-_scale}');
+  }
 
   /// The precision of this [Decimal].
   ///
