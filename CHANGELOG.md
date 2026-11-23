@@ -1,3 +1,7 @@
+# 3.2.7 (2026-11-23)
+
+- Fix [toDouble() returns NaN for long fractions and is often not the nearest double](https://github.com/a14n/dart-decimal/issues/126)
+
 # 3.2.6 (2026-07-28)
 
 - [Speed up round/floor/ceil/truncate by rounding on the significand](https://github.com/a14n/dart-decimal/pull/125)
